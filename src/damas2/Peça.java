@@ -11,4 +11,9 @@ package damas2;
  */
 class Peça {
     
+    String jogador;
+    
+    public Peça(String nome){
+        jogador = nome;
+    }
 }
