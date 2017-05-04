@@ -9,11 +9,18 @@ package damas2;
  *
  * @author MQGuilherme
  */
-class Peça {
+class Peca {
     
     String jogador;
+    int posX;
+    int posY;
     
-    public Peça(String nome){
+    public Peca(String nome){
         jogador = nome;
+    }
+    
+    public void move(int posX, int posY){
+       this.posX = posX;
+       this.posY = posY;
     }
 }

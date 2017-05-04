@@ -18,8 +18,9 @@ public class Damas2 {
      */
     static Tabuleiro tabuleiro;
     public static void main(String[] args) {
-        tabuleiro = montarTabuleiro();
-        //tabuleiro.printTabuleiro();
+        tabuleiro = new Tabuleiro();
+        tabuleiro.printTabuleiro();
+        System.out.println(tabuleiro.proximaPos(tabuleiro.tabuleiro[2][4].getPeca()));
         String ganhador =null;
         boolean fim_de_jogo=false;
         
@@ -49,9 +50,9 @@ public class Damas2 {
         int x1 = ler.nextInt();
         int y1 = ler.nextInt();   
         
-        if (tabuleiro.tabuleiro[x0][y0].) {
+        /*if (tabuleiro.tabuleiro[x0][y0]) {
             
-        }
+        }*/
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
