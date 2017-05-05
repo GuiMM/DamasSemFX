@@ -159,24 +159,104 @@ class Tabuleiro {
     }
     
     public void capturar(Peca p1, Peca p2){
-        if(p2.posX != 0 && p2.posX != 7 && p2.posY != 0 && p2.posY != 7){
+        
+        
+        if(p2.posX != 0 && p2.posX != 7 && p2.posY != 0 && p2.posY != 7 && p1.posX>1 && p1.posX<6 && p1.posY>1 && p1.posY<6){  
             if(p2.posX == p1.posX+1){                                   /* As quatro diagonais de uma peça*/                                           
                 if(p2.posY == p1.posY+1){
+                    if(tabuleiro[p2.posX+1][p2.posY+1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador))                  //p1
+                            p1.posX = p2.posX+1;                            //   p2              
+                            p1.posY = p2.posY+1;
+                            brancas.remove(p2);
+                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
+                    }
+                }else if(p2.posY == p1.posY-1){
+                    if(tabuleiro[p2.posX+1][p2.posY-1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador)){                  //     p1
+                            p1.posX = p2.posX+1;                            //  p2              
+                            p1.posY = p2.posY-1;
+                            brancas.remove(p2);
+                        }                  
+                    }
+                }
+               
+            }else if(p2.posX == p1.posX-1){
+                if(p2.posY == p1.posY+1){
                     if(tabuleiro[p2.posX-1][p2.posY+1].isEmpty()){
-                        p1.posX = p2.posX-1;
-                        p1.posY = p2.posY+1;
-                        if(p2.jogador.equals("humano"))
+                        if(!p2.jogador.equals(p1.jogador))                  //      p2
+                            p1.posX = p2.posX-1;                            //   p1              
+                            p1.posY = p2.posY+1;
+                            brancas.remove(p2);
+                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
+                    }
+                }else if(p2.posY == p1.posY-1){
+                    if(tabuleiro[p2.posX-1][p2.posY-1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador)){                  //     p2
+                            p1.posX = p2.posX-1;                            //          p1              
+                            p1.posY = p2.posY-1;
+                            brancas.remove(p2);
+                        }                  
+                    }
+                }
+            
+            }
+    
+        }
+        
+        if ((p1.posX == 0||p1.posX == 1)& p1.posY<2) {
+            if(p2.posX == p1.posX+1){                                   /* As duas diagonais de baixo de uma peça*/                                           
+                if(p2.posY == p1.posY+1){
+                    if(tabuleiro[p2.posX+1][p2.posY+1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador))                  //p1
+                            p1.posX = p2.posX+1;                            //   p2              
+                            p1.posY = p2.posY+1;
+                            brancas.remove(p2);
+                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
+                    }
+                }
+            }    
+        }else if ((p1.posX == 0||p1.posX == 1)& p1.posY>5) {
+            if(p2.posX == p1.posX+1){
+                if(p2.posY == p1.posY-1){
+                    if(tabuleiro[p2.posX+1][p2.posY-1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador)){                  //     p1
+                            p1.posX = p2.posX+1;                            //  p2              
+                            p1.posY = p2.posY-1;
+                            brancas.remove(p2);
+                        }                  
+                    }
+                }
+            }    
+        }
+        if ((p1.posX == 7||p1.posX == 6)& p1.posY<2) {                    // as duas diagonais acima de uma peça                              
+            if(p2.posX == p1.posX-1){
+                if(p2.posY == p1.posY+1){
+                    if(tabuleiro[p2.posX-1][p2.posY+1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador))                  //      p2
+                            p1.posX = p2.posX-1;                            //   p1              
+                            p1.posY = p2.posY+1;
                             brancas.remove(p2);
                         //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
                     }
                 }
             }
-            else if(p2.posY == p1.posY-1)
-        else if(p2.posX == p1.posX-1)
-             if(p2.posY == p1.posY+1)
-             else if(p2.posY == p1.posY-1) 
+        }else if ((p1.posX == 7||p1.posX == 6)& p1.posY>5) {
+            if(p2.posX == p1.posX-1){
+                if(p2.posY == p1.posY-1){
+                    if(tabuleiro[p2.posX-1][p2.posY-1].isEmpty()){
+                        if(!p2.jogador.equals(p1.jogador)){                  //     p2
+                            p1.posX = p2.posX-1;                            //          p1              
+                            p1.posY = p2.posY-1;
+                            brancas.remove(p2);
+                        }                  
+                    }
+                }
+            }    
         }
-                
+        if (true) {
+            
+        }
+        
     }
-    
-}
+}    
