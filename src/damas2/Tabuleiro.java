@@ -127,24 +127,65 @@ class Tabuleiro {
         }
     }
     
-    //Método responsável por gerar uma lista de possíveis celulas para onde ele possa se mover.
+    
+    
+    //Método responsável por gerar uma lista de possíveis celulas para onde ele possa se mover.(ele sempre se moverá pra frente e se ele for dama?)
     public ArrayList proximaPos(Peca p){
         ArrayList<Celula> provaveisCel = new ArrayList<>(); 
-        if(p.posY == 0){
-                if(tabuleiro[p.posX+1][p.posY+1].isEmpty())
-                    provaveisCel.add(tabuleiro[p.posX+1][p.posY+1]);
-        }
-        else if(tabuleiro[p.posX+1][p.posY-1].isEmpty())
-            provaveisCel.add(tabuleiro[p.posX+1][p.posY-1]);
-        if(p.posY == 7){
-                if(tabuleiro[p.posX+1][p.posY-1].isEmpty())
-                    provaveisCel.add(tabuleiro[p.posX+1][p.posY-1]);
-        }
-        else if(tabuleiro[p.posX+1][p.posY+1].isEmpty())
+        if(p.posY < 7){                                                     //evitando arrayIndexOutOfBounds
+            if(tabuleiro[p.posX+1][p.posY+1].isEmpty())
             provaveisCel.add(tabuleiro[p.posX+1][p.posY+1]);
+        }
+        if (p.posY > 0) {                                                   //evitando arrayIndexOutOfBounds
+            if(tabuleiro[p.posX+1][p.posY-1].isEmpty())
+            provaveisCel.add(tabuleiro[p.posX+1][p.posY-1]);
+        }
+            
+        
+       
         
         return provaveisCel;
             
+    }
+    
+     // este método analiza as peças que uma peça p pode comer
+    public ArrayList proximoAtaque(Peca p){ 
+            ArrayList<Peca> proximoAtaque = new ArrayList<>(); 
+            
+            if (p.posY < 6) {                                                                   //evitando arrayIndexOutOfBounds
+                if (p.posX < 6)                                                                 //evitando arrayIndexOutOfBounds
+                if (!tabuleiro[p.posX+1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,                         p
+                    if (tabuleiro[p.posX+2][p.posY+2].isEmpty())                                // e a diagonal está livre,                        target
+                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY+1].getPeca());             //então vc pode comer.
+                        
+                }
+                if (p.posX > 1) 
+                if (!tabuleiro[p.posX-1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,                             target
+                    if (tabuleiro[p.posX-2][p.posY+2].isEmpty())                                // e a diagonal está livre,                     p
+                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY+1].getPeca());             //então vc pode comer.
+                       
+                }
+            
+            }if (p.posY > 1) {
+                if (p.posX < 6)                                                                 //evitando arrayIndexOutOfBounds
+                if (!tabuleiro[p.posX+1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,                                 p
+                    if (tabuleiro[p.posX+2][p.posY-2].isEmpty())                                // e a diagonal está livre,                     target
+                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY-1].getPeca());             //então vc pode comer.
+        
+                }
+                if (p.posX > 1) 
+                if (!tabuleiro[p.posX-1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,
+                    if (tabuleiro[p.posX-2][p.posY-2].isEmpty())                                // e a diagonal está livre,                 target
+                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY-1].getPeca());             //então vc pode comer.                             p
+                       
+                }
+                
+            }
+ 
+                
+           
+            
+            return proximoAtaque;
     }
     
     //Método responsável por verificar se uma determinada célula na posição(x,y) pode ser uma das posições da lista de provaveis celulas.
@@ -157,106 +198,8 @@ class Tabuleiro {
         }
         return chave;
     }
-    
+   
     public void capturar(Peca p1, Peca p2){
         
-        
-        if(p2.posX != 0 && p2.posX != 7 && p2.posY != 0 && p2.posY != 7 && p1.posX>1 && p1.posX<6 && p1.posY>1 && p1.posY<6){  
-            if(p2.posX == p1.posX+1){                                   /* As quatro diagonais de uma peça*/                                           
-                if(p2.posY == p1.posY+1){
-                    if(tabuleiro[p2.posX+1][p2.posY+1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador))                  //p1
-                            p1.posX = p2.posX+1;                            //   p2              
-                            p1.posY = p2.posY+1;
-                            brancas.remove(p2);
-                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
-                    }
-                }else if(p2.posY == p1.posY-1){
-                    if(tabuleiro[p2.posX+1][p2.posY-1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador)){                  //     p1
-                            p1.posX = p2.posX+1;                            //  p2              
-                            p1.posY = p2.posY-1;
-                            brancas.remove(p2);
-                        }                  
-                    }
-                }
-               
-            }else if(p2.posX == p1.posX-1){
-                if(p2.posY == p1.posY+1){
-                    if(tabuleiro[p2.posX-1][p2.posY+1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador))                  //      p2
-                            p1.posX = p2.posX-1;                            //   p1              
-                            p1.posY = p2.posY+1;
-                            brancas.remove(p2);
-                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
-                    }
-                }else if(p2.posY == p1.posY-1){
-                    if(tabuleiro[p2.posX-1][p2.posY-1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador)){                  //     p2
-                            p1.posX = p2.posX-1;                            //          p1              
-                            p1.posY = p2.posY-1;
-                            brancas.remove(p2);
-                        }                  
-                    }
-                }
-            
-            }
-    
-        }
-        
-        if ((p1.posX == 0||p1.posX == 1)& p1.posY<2) {
-            if(p2.posX == p1.posX+1){                                   /* As duas diagonais de baixo de uma peça*/                                           
-                if(p2.posY == p1.posY+1){
-                    if(tabuleiro[p2.posX+1][p2.posY+1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador))                  //p1
-                            p1.posX = p2.posX+1;                            //   p2              
-                            p1.posY = p2.posY+1;
-                            brancas.remove(p2);
-                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
-                    }
-                }
-            }    
-        }else if ((p1.posX == 0||p1.posX == 1)& p1.posY>5) {
-            if(p2.posX == p1.posX+1){
-                if(p2.posY == p1.posY-1){
-                    if(tabuleiro[p2.posX+1][p2.posY-1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador)){                  //     p1
-                            p1.posX = p2.posX+1;                            //  p2              
-                            p1.posY = p2.posY-1;
-                            brancas.remove(p2);
-                        }                  
-                    }
-                }
-            }    
-        }
-        if ((p1.posX == 7||p1.posX == 6)& p1.posY<2) {                    // as duas diagonais acima de uma peça                              
-            if(p2.posX == p1.posX-1){
-                if(p2.posY == p1.posY+1){
-                    if(tabuleiro[p2.posX-1][p2.posY+1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador))                  //      p2
-                            p1.posX = p2.posX-1;                            //   p1              
-                            p1.posY = p2.posY+1;
-                            brancas.remove(p2);
-                        //tabuleiro[p2.posX][p2.posY].setPeca(null);                    
-                    }
-                }
-            }
-        }else if ((p1.posX == 7||p1.posX == 6)& p1.posY>5) {
-            if(p2.posX == p1.posX-1){
-                if(p2.posY == p1.posY-1){
-                    if(tabuleiro[p2.posX-1][p2.posY-1].isEmpty()){
-                        if(!p2.jogador.equals(p1.jogador)){                  //     p2
-                            p1.posX = p2.posX-1;                            //          p1              
-                            p1.posY = p2.posY-1;
-                            brancas.remove(p2);
-                        }                  
-                    }
-                }
-            }    
-        }
-        if (true) {
-            
-        }
-        
-    }
+    }   
 }    
