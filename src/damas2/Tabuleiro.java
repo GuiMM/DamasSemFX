@@ -70,10 +70,7 @@ class Tabuleiro {
         pretas.add(b12);
         inicializarTabuleiro();
         distribuiPecas();
-        
-       
-        
-        
+      
         
         
     }
@@ -156,7 +153,7 @@ class Tabuleiro {
     }
     
     
-     // este método analiza as peças que uma peça p pode comer
+     // este método identifica as peças que uma peça p pode comer
     public ArrayList proximoAtaque(Peca p){ 
             ArrayList<Peca> proximoAtaque = new ArrayList<>(); 
             
@@ -221,7 +218,8 @@ class Tabuleiro {
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-                
+                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
+                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro
                 p1.move(p1.posX-2, p1.posY-2);          
                 tabuleiro[p1.posX][p1.posY].p = p1;
             }else{                                                          //p1.posY==p2.posY-1    
@@ -229,7 +227,8 @@ class Tabuleiro {
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-                             
+                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
+                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro           
                 p1.move(p1.posX-2, p1.posY+2);
                 tabuleiro[p1.posX][p1.posY].p = p1;
             }
@@ -240,7 +239,8 @@ class Tabuleiro {
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-               
+                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
+                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro
                 p1.move(p1.posX+2, p1.posY-2);
                 tabuleiro[p1.posX][p1.posY].p = p1;
             }else{                                                          //p1.posY==p2.posY-1    
@@ -248,7 +248,8 @@ class Tabuleiro {
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-              
+                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
+                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro
                 p1.move(p1.posX+2, p1.posY+2);
                 tabuleiro[p1.posX][p1.posY].p = p1;
             }
