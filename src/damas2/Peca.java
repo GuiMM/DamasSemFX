@@ -11,14 +11,14 @@ package damas2;
  */
 class Peca {
     
-    String jogador;
-    boolean eh_dama;
-    int posX;
-    int posY;
+    private String jogador;
+    private boolean eh_dama;
+    private int posX;
+    private int posY;
     
     public Peca(String nome){
-        jogador = nome;
-        eh_dama=false;
+        this.jogador = nome;
+        this.eh_dama = false;
     }
     
     public void move(int posX, int posY){
@@ -27,20 +27,49 @@ class Peca {
        ehDama();
     }
     
-    //verifica para PC ou para humano se esta peça é uma dama. Deve ser chamado sempre a cada movimento. para saber se a peça se tornou dama.
+    /*verifica para PC ou para humano se esta peça é uma dama. Deve ser chamado 
+    sempre a cada movimento. para saber se a peça se tornou dama.*/
     public void ehDama(){
         boolean eh_peca_branca;
-        if (jogador.equals("humano")) {                                  //verifica qual o time do jogador, vamos fazer um método que pode ser usado pelo humano ou pelo PC
-            eh_peca_branca=true;
-        }else
-            eh_peca_branca=false;
-        
+        /*verifica qual o time do jogador, vamos fazer um método que pode ser
+        usado pelo humano ou pelo PC*/
+        eh_peca_branca = jogador.equals("humano");   
         if (eh_peca_branca && posX==7) {
             eh_dama=true;
         }else if (!eh_peca_branca && posX==0) {
             eh_dama=true;
         }
-            
-    
+    }
+
+    public String getJogador() {
+        return jogador;
+    }
+
+    public void setJogador(String jogador) {
+        this.jogador = jogador;
+    }
+
+    public boolean isEh_dama() {
+        return eh_dama;
+    }
+
+    public void setEh_dama(boolean eh_dama) {
+        this.eh_dama = eh_dama;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
     }
 }

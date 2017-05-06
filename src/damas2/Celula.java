@@ -9,10 +9,10 @@ package damas2;
  *
  * @author VBrum
  */
-public class Celula {
-    public Peca p;
-    public int x;
-    public int y;
+class Celula {
+    private Peca p;
+    private int x;
+    private int y;
     
     public Celula(int x, int y){
         this.x = x;
@@ -45,10 +45,5 @@ public class Celula {
     
     public boolean isEmpty(){
         return p == null;
-    }
-    
-    public void inserirPeca(Peca p){
-        this.p = p;
-    }
-    
+    }    
 }

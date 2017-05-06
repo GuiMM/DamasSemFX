@@ -12,78 +12,34 @@ import java.util.ArrayList;
  * @author MQGuilherme
  */
 class Tabuleiro {
-    ArrayList <Peca> brancas = new ArrayList(12);
-    ArrayList <Peca> pretas = new ArrayList(12);
-    
-    Celula[][] tabuleiro = new Celula[8][8];
+    private final ArrayList <Peca> brancas = new ArrayList(12);
+    private final ArrayList <Peca> pretas = new ArrayList(12);
+    private final Celula[][] tabuleiro = new Celula[8][8];
     
     public Tabuleiro(){
-        Peca a1 = new Peca("humano");
-        Peca a2 = new Peca("humano");
-        Peca a3 = new Peca("humano");
-        Peca a4 = new Peca("humano");
-        Peca a5 = new Peca("humano");
-        Peca a6 = new Peca("humano");
-        Peca a7 = new Peca("humano");
-        Peca a8 = new Peca("humano");
-        Peca a9 = new Peca("humano");
-        Peca a10 = new Peca("humano");
-        Peca a11 = new Peca("humano");
-        Peca a12 = new Peca("humano");
-        Peca b1 = new Peca("Computador");
-        Peca b2 = new Peca("Computador");
-        Peca b3 = new Peca("Computador");
-        Peca b4 = new Peca("Computador");
-        Peca b5 = new Peca("Computador");
-        Peca b6 = new Peca("Computador");
-        Peca b7 = new Peca("Computador");
-        Peca b8 = new Peca("Computador");
-        Peca b9 = new Peca("Computador");
-        Peca b10 = new Peca("Computador");
-        Peca b11 = new Peca("Computador");
-        Peca b12 = new Peca("Computador");
-        
-        brancas.add(a1);
-        brancas.add(a2);
-        brancas.add(a3);
-        brancas.add(a4);
-        brancas.add(a5);
-        brancas.add(a6);
-        brancas.add(a7);
-        brancas.add(a8);
-        brancas.add(a9);
-        brancas.add(a10);
-        brancas.add(a11);
-        brancas.add(a12);
-    
-        pretas.add(b1);
-        pretas.add(b2);
-        pretas.add(b3);
-        pretas.add(b4);
-        pretas.add(b5);
-        pretas.add(b6);
-        pretas.add(b7);
-        pretas.add(b8);
-        pretas.add(b9);
-        pretas.add(b10);
-        pretas.add(b11);
-        pretas.add(b12);
         inicializarTabuleiro();
+        criaPecas();
         distribuiPecas();
-      
-        
-        
     }
     
+    private void criaPecas(){
+        for (int i=0;i<24;i++){
+            if(i>=12){
+                Peca pr = new Peca("Computador");
+                pretas.add(pr);
+            }else{
+                Peca br = new Peca("  Humano  ");
+                brancas.add(br);
+            }
+        }
+    }
     
-    public void inicializarTabuleiro(){
+    private void inicializarTabuleiro(){
         for(int i = 0; i < tabuleiro.length; i++){
             for(int j = 0; j < tabuleiro[i].length; j++){
                 tabuleiro[i][j] = new Celula(i,j);
             }
         }
-        
-        
     }
     
     private void distribuiPecas() {
@@ -92,26 +48,26 @@ class Tabuleiro {
             for (int j = 0; j < 4; j++) {
                
                 if (i%2==0) {
-                    brancas.get(aux).posX = i;
-                    brancas.get(aux).posY = j*2;
-                    tabuleiro[i][j*2].p = brancas.get(aux);                   
+                    brancas.get(aux).setPosX(i);
+                    brancas.get(aux).setPosY(j*2);
+                    tabuleiro[i][j*2].setPeca(brancas.get(aux));                   
                 }else
                 {
-                    brancas.get(aux).posX = i;
-                    brancas.get(aux).posY = j*2+1;
-                    tabuleiro[i][j*2+1].p = brancas.get(aux);
+                    brancas.get(aux).setPosX(i);
+                    brancas.get(aux).setPosY(j*2+1);
+                    tabuleiro[i][j*2+1].setPeca(brancas.get(aux));
                 }
                 
                 if (i%2==0) {
-                    pretas.get(aux).posX = i+5;
-                    pretas.get(aux).posY = j*2;
-                    tabuleiro[i+5][j*2].p = pretas.get(aux);
+                    pretas.get(aux).setPosX(i+5);
+                    pretas.get(aux).setPosY(j*2);
+                    tabuleiro[i+5][j*2].setPeca(pretas.get(aux));
                     
                 }else
                 {
-                    pretas.get(aux).posX = i+5;
-                    pretas.get(aux).posY = j*2+1;
-                    tabuleiro[i+5][j*2+1].p = pretas.get(aux);
+                    pretas.get(aux).setPosX(i+5);
+                    pretas.get(aux).setPosY(j*2+1);
+                    tabuleiro[i+5][j*2+1].setPeca(pretas.get(aux));
                     
                 }
                 aux++;
@@ -125,7 +81,7 @@ class Tabuleiro {
                 if (tabuleiro[i][j].isEmpty()) {
                     System.out.print( " ______ " );
                 }else
-                    System.out.print(" "+tabuleiro[i][j].p.jogador+" "+ "(" + tabuleiro[i][j].x + "," + tabuleiro[i][j].y + ")" );   
+                    System.out.print(" "+tabuleiro[i][j].getPeca().getJogador()+" "+ "(" + tabuleiro[i][j].getX() + "," + tabuleiro[i][j].getY() + ")" );   
             }
             System.out.println("\n");
         }
@@ -133,16 +89,18 @@ class Tabuleiro {
     
     
     
-    //Método responsável por gerar uma lista de possíveis celulas para onde ele possa se mover.(ele sempre se moverá pra frente e se ele for dama? e se ele for do time da parte de baixo do tabuleiro?)
+    /*Método responsável por gerar uma lista de possíveis celulas para onde ele 
+    possa se mover.(ele sempre se moverá pra frente e se ele for dama? e se ele 
+    for do time da parte de baixo do tabuleiro?)*/
     public ArrayList proximaPos(Peca p){
         ArrayList<Celula> provaveisCel = new ArrayList<>(); 
-        if(p.posY < 7){                                                     //evitando arrayIndexOutOfBounds
-            if(tabuleiro[p.posX+1][p.posY+1].isEmpty())
-            provaveisCel.add(tabuleiro[p.posX+1][p.posY+1]);
+        if(p.getPosY() < 7){      //evitando arrayIndexOutOfBounds
+            if(tabuleiro[p.getPosX()+1][p.getPosY()+1].isEmpty())
+            provaveisCel.add(tabuleiro[p.getPosX()+1][p.getPosY()+1]);
         }
-        if (p.posY > 0) {                                                   //evitando arrayIndexOutOfBounds
-            if(tabuleiro[p.posX+1][p.posY-1].isEmpty())
-            provaveisCel.add(tabuleiro[p.posX+1][p.posY-1]);
+        if (p.getPosY() > 0) {    //evitando arrayIndexOutOfBounds
+            if(tabuleiro[p.getPosX()+1][p.getPosY()-1].isEmpty())
+            provaveisCel.add(tabuleiro[p.getPosX()+1][p.getPosY()-1]);
         }
             
         
@@ -153,105 +111,122 @@ class Tabuleiro {
     }
     
     
-     // este método identifica as peças que uma peça p pode comer
+    // este método identifica as peças que uma peça p pode comer
     public ArrayList proximoAtaque(Peca p){ 
-            ArrayList<Peca> proximoAtaque = new ArrayList<>(); 
-            
-            if (p.posY < 6) {                                                                                                               //evitando arrayIndexOutOfBounds
-                if (p.posX < 6)                                                                                                             //evitando arrayIndexOutOfBounds
-                if (!tabuleiro[p.posX+1][p.posY+1].isEmpty() && !tabuleiro[p.posX+1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,                        
-                    if (tabuleiro[p.posX+2][p.posY+2].isEmpty())                                                                            // e a diagonal está livre,                                 p
-                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY+1].getPeca());                                                         //então vc pode comer.                                          target
-                        
+        ArrayList<Peca> proximoAtaque = new ArrayList<>();
+
+        if (p.getPosY() < 6) {   //evitando arrayIndexOutOfBounds
+            if (p.getPosX() < 6) //evitando arrayIndexOutOfBounds
+            {
+                if (!tabuleiro[p.getPosX() + 1][p.getPosY() + 1].isEmpty()
+                        && !tabuleiro[p.getPosX() + 1][p.getPosY() + 1].getPeca().getJogador().equals(p.getJogador())) { // se existe uma peca na celula e se nao é a sua peça,                        
+                    if (tabuleiro[p.getPosX() + 2][p.getPosY() + 2].isEmpty()) // e a diagonal está livre, p então vc pode comer.  
+                    {
+                        proximoAtaque.add(tabuleiro[p.getPosX() + 1][p.getPosY() + 1].getPeca());
+                    }
                 }
-                if (p.posX > 1) 
-                if (!tabuleiro[p.posX-1][p.posY+1].isEmpty() && !tabuleiro[p.posX-1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,                             
-                    if (tabuleiro[p.posX-2][p.posY+2].isEmpty())                                                                            // e a diagonal está livre,                                     target
-                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY+1].getPeca());                                                         //então vc pode comer.                                      p
-                       
-                }
-            
-            }if (p.posY > 1) {
-                if (p.posX < 6)                                                                                                             //evitando arrayIndexOutOfBounds
-                if (!tabuleiro[p.posX+1][p.posY-1].isEmpty() && !tabuleiro[p.posX+1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,                                 
-                    if (tabuleiro[p.posX+2][p.posY-2].isEmpty())                                                                            // e a diagonal está livre,                                         p
-                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY-1].getPeca());                                                         //então vc pode comer.                                      target
-        
-                }
-                if (p.posX > 1) 
-                if (!tabuleiro[p.posX-1][p.posY-1].isEmpty() && !tabuleiro[p.posX-1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,
-                    if (tabuleiro[p.posX-2][p.posY-2].isEmpty())                                                                            // e a diagonal está livre,                                 target
-                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY-1].getPeca());                                                         //então vc pode comer.                                              p
-                       
-                }
-                
             }
- 
-                
-           
-            
-            return proximoAtaque;
+            if (p.getPosX() > 1) {
+                if (!tabuleiro[p.getPosX() - 1][p.getPosY() + 1].isEmpty()
+                        && !tabuleiro[p.getPosX() - 1][p.getPosY() + 1].getPeca().getJogador().equals(p.getJogador())) {  // se existe uma peca na celula e se nao é a sua peça,                             
+                    if (tabuleiro[p.getPosX() - 2][p.getPosY() + 2].isEmpty()) // e a diagonal está livre, target então vc pode comer.
+                    {
+                        proximoAtaque.add(tabuleiro[p.getPosX() - 1][p.getPosY() + 1].getPeca());
+                    }
+                }
+            }
+
+        }
+        if (p.getPosY() > 1) {
+            if (p.getPosX() < 6) //evitando arrayIndexOutOfBounds
+            {
+                if (!tabuleiro[p.getPosX() + 1][p.getPosY() - 1].isEmpty()
+                        && !tabuleiro[p.getPosX() + 1][p.getPosY() - 1].getPeca().getJogador().equals(p.getJogador())) {  // se existe uma peca na celula e se nao é a sua peça,                                 
+                    if (tabuleiro[p.getPosX() + 2][p.getPosY() - 2].isEmpty()) // e a diagonal está livre, p então vc pode comer.
+                    {
+                        proximoAtaque.add(tabuleiro[p.getPosX() + 1][p.getPosY() - 1].getPeca());
+                    }
+                }
+            }
+            if (p.getPosX() > 1) {
+                if (!tabuleiro[p.getPosX() - 1][p.getPosY() - 1].isEmpty()
+                        && !tabuleiro[p.getPosX() - 1][p.getPosY() - 1].getPeca().getJogador().equals(p.getJogador())) {   // se existe uma peca na celula e se nao é a sua peça,
+                    if (tabuleiro[p.getPosX() - 2][p.getPosY() - 2].isEmpty()) // e a diagonal está livre, target então vc pode comer.
+                    {
+                        proximoAtaque.add(tabuleiro[p.getPosX() - 1][p.getPosY() - 1].getPeca());
+                    }
+                }
+            }
+
+        }
+
+        return proximoAtaque;
     }
     
-    //Método responsável por verificar se uma determinada célula na posição(x,y) pode ser uma das posições da lista de provaveis celulas.
+    /*Método responsável por verificar se uma determinada célula na posição(x,y) 
+    pode ser uma das posições da lista de provaveis celulas.*/
     public boolean avaliaPosicao(Peca p, int x, int y){
         ArrayList <Celula> list = proximaPos(p);
         boolean chave = false;
         for(int i = 0; i < list.size(); i++){
-            if(list.get(i).x == x && list.get(i).y == y)
+            if(list.get(i).getX() == x && list.get(i).getY() == y)
                 chave = true;
         }
         return chave;
     }
     
-   // este método executa a captura de uma peça p2, por uma peça p1(não estou preocupado em validar arrayIndexOutOfBounds, ou se é uma peça comível, pois o método proximoAtaque ja faz isso)
+    /*este método executa a captura de uma peça p2, por uma peça p1
+    (não estou preocupado em validar arrayIndexOutOfBounds, 
+    ou se é uma peça comível, pois o método proximoAtaque ja faz isso)*/
     public void capturar(Peca p1, Peca p2){
         boolean eh_peca_branca;
-        if (p1.jogador.equals("humano")) {                                  //verifica qual o time do p1, vamos fazer um método que pode ser usado pelo humano ou pelo PC
+        if (p1.getJogador().equals("  Humano  ")) { /*verifica qual o time do p1, 
+                                                    vamos fazer um método que pode 
+                                                    ser usado pelo humano ou pelo PC*/
             eh_peca_branca=true;
         }else
             eh_peca_branca=false;
         
-        if (p1.posX==p2.posX+1) {
-            if (p1.posY==p2.posY+1) {
-                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+        if (p1.getPosX()==p2.getPosX()+1) {
+            if (p1.getPosY()==p2.getPosY()+1) {
+                if (eh_peca_branca)  //verifica qual peca deve morrer
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
-                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro
-                p1.move(p1.posX-2, p1.posY-2);          
-                tabuleiro[p1.posX][p1.posY].p = p1;
-            }else{                                                          //p1.posY==p2.posY-1    
-                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+                tabuleiro[p2.getPosX()][p2.getPosY()] = new Celula(p2.getPosX(),p2.getPosY());  //limpa o tabuleiro
+                tabuleiro[p1.getPosX()][p1.getPosY()] = new Celula(p1.getPosX(),p1.getPosY());  //limpa o tabuleiro
+                p1.move(p1.getPosX()-2, p1.getPosY()-2);          
+                tabuleiro[p1.getPosX()][p1.getPosY()].setPeca(p1);
+            }else{  //p1.posY==p2.posY-1    
+                if (eh_peca_branca)  //verifica qual peca deve morrer
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
-                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro           
-                p1.move(p1.posX-2, p1.posY+2);
-                tabuleiro[p1.posX][p1.posY].p = p1;
+                tabuleiro[p2.getPosX()][p2.getPosY()] = new Celula(p2.getPosX(),p2.getPosY());  //limpa o tabuleiro
+                tabuleiro[p1.getPosX()][p1.getPosY()] = new Celula(p1.getPosX(),p1.getPosY());  //limpa o tabuleiro           
+                p1.move(p1.getPosX()-2, p1.getPosY()+2);
+                tabuleiro[p1.getPosX()][p1.getPosY()].setPeca(p1);
             }
             
-        }else{                                                              //p1.posX==p2.posX-1
-            if (p1.posY==p2.posY+1) {
-                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+        }else{  //p1.posX==p2.posX-1
+            if (p1.getPosY()==p2.getPosY()+1) {
+                if (eh_peca_branca)  //verifica qual peca deve morrer
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
-                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro
-                p1.move(p1.posX+2, p1.posY-2);
-                tabuleiro[p1.posX][p1.posY].p = p1;
-            }else{                                                          //p1.posY==p2.posY-1    
-                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+                tabuleiro[p2.getPosX()][p2.getPosY()] = new Celula(p2.getPosX(),p2.getPosY());  //limpa o tabuleiro
+                tabuleiro[p1.getPosX()][p1.getPosY()] = new Celula(p1.getPosX(),p1.getPosY());  //limpa o tabuleiro
+                p1.move(p1.getPosX()+2, p1.getPosY()-2);
+                tabuleiro[p1.getPosX()][p1.getPosY()].setPeca(p1);
+            }else{   //p1.posY==p2.posY-1    
+                if (eh_peca_branca)  //verifica qual peca deve morrer
                     pretas.remove(p2);                   
                 else
                     brancas.remove(p2);
-                tabuleiro[p2.posX][p2.posY] = new Celula(p2.posX,p2.posY);  //limpa o tabuleiro
-                tabuleiro[p1.posX][p1.posY] = new Celula(p1.posX,p1.posY);  //limpa o tabuleiro
-                p1.move(p1.posX+2, p1.posY+2);
-                tabuleiro[p1.posX][p1.posY].p = p1;
+                tabuleiro[p2.getPosX()][p2.getPosY()] = new Celula(p2.getPosX(),p2.getPosY());  //limpa o tabuleiro
+                tabuleiro[p1.getPosX()][p1.getPosY()] = new Celula(p1.getPosX(),p1.getPosY());  //limpa o tabuleiro
+                p1.move(p1.getPosX()+2, p1.getPosY()+2);
+                tabuleiro[p1.getPosX()][p1.getPosY()].setPeca(p1);
             }
         
         }
