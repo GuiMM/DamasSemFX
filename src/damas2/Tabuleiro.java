@@ -69,12 +69,15 @@ class Tabuleiro {
         pretas.add(b11);
         pretas.add(b12);
         inicializarTabuleiro();
+        distribuiPecas();
         
+       
         
         
         
         
     }
+    
     
     public void inicializarTabuleiro(){
         for(int i = 0; i < tabuleiro.length; i++){
@@ -83,6 +86,10 @@ class Tabuleiro {
             }
         }
         
+        
+    }
+    
+    private void distribuiPecas() {
         int aux=0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
@@ -129,7 +136,7 @@ class Tabuleiro {
     
     
     
-    //Método responsável por gerar uma lista de possíveis celulas para onde ele possa se mover.(ele sempre se moverá pra frente e se ele for dama?)
+    //Método responsável por gerar uma lista de possíveis celulas para onde ele possa se mover.(ele sempre se moverá pra frente e se ele for dama? e se ele for do time da parte de baixo do tabuleiro?)
     public ArrayList proximaPos(Peca p){
         ArrayList<Celula> provaveisCel = new ArrayList<>(); 
         if(p.posY < 7){                                                     //evitando arrayIndexOutOfBounds
@@ -148,35 +155,36 @@ class Tabuleiro {
             
     }
     
+    
      // este método analiza as peças que uma peça p pode comer
     public ArrayList proximoAtaque(Peca p){ 
             ArrayList<Peca> proximoAtaque = new ArrayList<>(); 
             
-            if (p.posY < 6) {                                                                   //evitando arrayIndexOutOfBounds
-                if (p.posX < 6)                                                                 //evitando arrayIndexOutOfBounds
-                if (!tabuleiro[p.posX+1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,                         p
-                    if (tabuleiro[p.posX+2][p.posY+2].isEmpty())                                // e a diagonal está livre,                        target
-                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY+1].getPeca());             //então vc pode comer.
+            if (p.posY < 6) {                                                                                                               //evitando arrayIndexOutOfBounds
+                if (p.posX < 6)                                                                                                             //evitando arrayIndexOutOfBounds
+                if (!tabuleiro[p.posX+1][p.posY+1].isEmpty() && !tabuleiro[p.posX+1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,                        
+                    if (tabuleiro[p.posX+2][p.posY+2].isEmpty())                                                                            // e a diagonal está livre,                                 p
+                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY+1].getPeca());                                                         //então vc pode comer.                                          target
                         
                 }
                 if (p.posX > 1) 
-                if (!tabuleiro[p.posX-1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,                             target
-                    if (tabuleiro[p.posX-2][p.posY+2].isEmpty())                                // e a diagonal está livre,                     p
-                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY+1].getPeca());             //então vc pode comer.
+                if (!tabuleiro[p.posX-1][p.posY+1].isEmpty() && !tabuleiro[p.posX-1][p.posY+1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,                             
+                    if (tabuleiro[p.posX-2][p.posY+2].isEmpty())                                                                            // e a diagonal está livre,                                     target
+                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY+1].getPeca());                                                         //então vc pode comer.                                      p
                        
                 }
             
             }if (p.posY > 1) {
-                if (p.posX < 6)                                                                 //evitando arrayIndexOutOfBounds
-                if (!tabuleiro[p.posX+1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,                                 p
-                    if (tabuleiro[p.posX+2][p.posY-2].isEmpty())                                // e a diagonal está livre,                     target
-                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY-1].getPeca());             //então vc pode comer.
+                if (p.posX < 6)                                                                                                             //evitando arrayIndexOutOfBounds
+                if (!tabuleiro[p.posX+1][p.posY-1].isEmpty() && !tabuleiro[p.posX+1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,                                 
+                    if (tabuleiro[p.posX+2][p.posY-2].isEmpty())                                                                            // e a diagonal está livre,                                         p
+                        proximoAtaque.add(tabuleiro[p.posX+1][p.posY-1].getPeca());                                                         //então vc pode comer.                                      target
         
                 }
                 if (p.posX > 1) 
-                if (!tabuleiro[p.posX-1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se nao é a sua peça,
-                    if (tabuleiro[p.posX-2][p.posY-2].isEmpty())                                // e a diagonal está livre,                 target
-                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY-1].getPeca());             //então vc pode comer.                             p
+                if (!tabuleiro[p.posX-1][p.posY-1].isEmpty() && !tabuleiro[p.posX-1][p.posY-1].getPeca().jogador.equals(p.jogador)) {       // se existe uma peca na celula e se nao é a sua peça,
+                    if (tabuleiro[p.posX-2][p.posY-2].isEmpty())                                                                            // e a diagonal está livre,                                 target
+                        proximoAtaque.add(tabuleiro[p.posX-1][p.posY-1].getPeca());                                                         //então vc pode comer.                                              p
                        
                 }
                 
@@ -198,8 +206,55 @@ class Tabuleiro {
         }
         return chave;
     }
-   
+    
+   // este método executa a captura de uma peça p2, por uma peça p1(não estou preocupado em validar arrayIndexOutOfBounds, ou se é uma peça comível, pois o método proximoAtaque ja faz isso)
     public void capturar(Peca p1, Peca p2){
+        boolean eh_peca_branca;
+        if (p1.jogador.equals("humano")) {                                  //verifica qual o time do p1, vamos fazer um método que pode ser usado pelo humano ou pelo PC
+            eh_peca_branca=true;
+        }else
+            eh_peca_branca=false;
         
+        if (p1.posX==p2.posX+1) {
+            if (p1.posY==p2.posY+1) {
+                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+                    pretas.remove(p2);                   
+                else
+                    brancas.remove(p2);
+                
+                p1.move(p1.posX-2, p1.posY-2);          
+                tabuleiro[p1.posX][p1.posY].p = p1;
+            }else{                                                          //p1.posY==p2.posY-1    
+                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+                    pretas.remove(p2);                   
+                else
+                    brancas.remove(p2);
+                             
+                p1.move(p1.posX-2, p1.posY+2);
+                tabuleiro[p1.posX][p1.posY].p = p1;
+            }
+            
+        }else{                                                              //p1.posX==p2.posX-1
+            if (p1.posY==p2.posY+1) {
+                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+                    pretas.remove(p2);                   
+                else
+                    brancas.remove(p2);
+               
+                p1.move(p1.posX+2, p1.posY-2);
+                tabuleiro[p1.posX][p1.posY].p = p1;
+            }else{                                                          //p1.posY==p2.posY-1    
+                if (eh_peca_branca)                                         //verifica qual peca deve morrer
+                    pretas.remove(p2);                   
+                else
+                    brancas.remove(p2);
+              
+                p1.move(p1.posX+2, p1.posY+2);
+                tabuleiro[p1.posX][p1.posY].p = p1;
+            }
+        
+        }
     }   
+
+    
 }    

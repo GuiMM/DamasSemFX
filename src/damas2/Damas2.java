@@ -20,13 +20,13 @@ public class Damas2 {
     public static void main(String[] args) {
         tabuleiro = new Tabuleiro();
         tabuleiro.printTabuleiro();
-        System.out.println(tabuleiro.proximaPos(tabuleiro.tabuleiro[2][4].getPeca()));
+//        System.out.println(tabuleiro.proximoAtaque(tabuleiro.tabuleiro[0][0].getPeca()));                             //teste de métodos
         String ganhador =null;
         boolean fim_de_jogo=false;
         
 //        while(!fim_de_jogo)
 //        {
-            rodadaHumano();
+//            rodadaHumano();
 //            rodadaMaquina();
 //            ganhador = testeVencedor();
 //            
