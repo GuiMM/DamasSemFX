@@ -11,13 +11,15 @@ package damas2;
  */
 class Peca {
     
+    private final String id;
     private String jogador;
     private boolean eh_dama;
     private int posX;
     private int posY;
     
-    public Peca(String nome){
-        this.jogador = nome;
+    public Peca(String id, String jogador){
+        this.id = id;
+        this.jogador = jogador;
         this.eh_dama = false;
     }
     
@@ -33,7 +35,7 @@ class Peca {
         boolean eh_peca_branca;
         /*verifica qual o time do jogador, vamos fazer um método que pode ser
         usado pelo humano ou pelo PC*/
-        eh_peca_branca = jogador.equals("humano");   
+        eh_peca_branca = jogador.equals("  Humano  ");   
         if (eh_peca_branca && posX==7) {
             eh_dama=true;
         }else if (!eh_peca_branca && posX==0) {
@@ -49,7 +51,7 @@ class Peca {
         this.jogador = jogador;
     }
 
-    public boolean isEh_dama() {
+    public boolean eh_Dama() {
         return eh_dama;
     }
 
@@ -72,4 +74,9 @@ class Peca {
     public void setPosY(int posY) {
         this.posY = posY;
     }
+
+    public String getId() {
+        return id;
+    }
+    
 }
