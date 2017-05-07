@@ -5,6 +5,7 @@
  */
 package damas2;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -20,41 +21,35 @@ public class Damas2 {
     public static void main(String[] args) {
         tabuleiro = new Tabuleiro();
         tabuleiro.printTabuleiro();
-//        System.out.println(tabuleiro.proximoAtaque(tabuleiro.tabuleiro[1][1].getPeca()));                             //teste de métodos
-        String ganhador =null;
-        boolean fim_de_jogo=false;
         
-//        while(!fim_de_jogo)
-//        {
-//            rodadaHumano();
-//            rodadaMaquina();
-//            ganhador = testeVencedor();
-//            
-//        }
-        System.out.println("Fim de jogo. Vencedor:"+ganhador);
-        // TODO code application logic here
-    }
-
-    
-    private static Tabuleiro montarTabuleiro() {
-        Tabuleiro a = new Tabuleiro();
-        return a;
+        while(!tabuleiro.fimDeJogo().contains("Fim de Jogo"))
+        {
+            rodadaHumano();
+            //rodadaMaquina();
+            tabuleiro.printTabuleiro();
+        }
     }
 
     private static void rodadaHumano() {
-        System.out.println("Digite o xy da peça que vc quer mover e a posição final dela");
+        System.out.println("Digite o xy da peça que vc quer mover e a posição final dela:");
         Scanner ler = new Scanner(System.in);
-        int x0 = ler.nextInt();
-        int y0 = ler.nextInt();
+        int x = ler.nextInt();
+        int y = ler.nextInt();
      
-        int x1 = ler.nextInt();
-        int y1 = ler.nextInt();   
+        Celula daPeca_a_Jogar = tabuleiro.getTabuleiro()[x][y];
+        Peca a_Jogar = daPeca_a_Jogar.getPeca();
         
-        /*if (tabuleiro.tabuleiro[x0][y0]) {
-            
-        }*/
+        List<Jogada> jogadas = tabuleiro.verificaJogadas(a_Jogar);
+        for (int i = 0; i < jogadas.size(); i++) {
+            System.out.println(i+1+" - "+jogadas.get(i).getTipo()+"  "+
+                                        jogadas.get(i).getDestino().getX()+","+
+                                        jogadas.get(i).getDestino().getY());
+        }
         
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Digite o nº da jogada a ser feita:");
+        int nJogada = ler.nextInt();
+        
+        jogadas.get(nJogada-1).realizaJogada(tabuleiro, a_Jogar);
     }
     
 }

@@ -50,19 +50,19 @@ class Jogada {
         } else {
             t.getBrancas().remove(pecaCapturada);
         }
-        t.getTabuleiro()[pecaCapturada.getPosX()][pecaCapturada.getPosY()] = null;
+        t.getTabuleiro()[pecaCapturada.getPosX()][pecaCapturada.getPosY()].setPeca(null);
         movimentar(t,aJogar);
     }
     
     private void movimentar(Tabuleiro t, Peca aJogar){
         t.getTabuleiro()[destino.getX()][destino.getY()].setPeca(aJogar);
-        t.getTabuleiro()[aJogar.getPosX()][aJogar.getPosY()] = null;
+        t.getTabuleiro()[aJogar.getPosX()][aJogar.getPosY()].setPeca(null);
         if((aJogar.getPosX()==0 && aJogar.getId().contains("pr"))||
            (aJogar.getPosX()==7 && aJogar.getId().contains("br")))
-            fazerDama(t, aJogar);
+            fazerDama(aJogar);
     }
     
-    private void fazerDama(Tabuleiro t, Peca aJogar){
+    private void fazerDama(Peca aJogar){
         aJogar.setEh_dama(true);
     }
 }

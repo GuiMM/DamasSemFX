@@ -7,6 +7,7 @@ package damas2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -103,7 +104,7 @@ class Tabuleiro {
     
     /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
     ou captura, de uma peça comum. (FALTA ANALISAR CAPTURA PARA TRÁS)*/
-    public Map<String,Jogada> verificaJogadas(Peca p){
+    public ArrayList<Jogada> verificaJogadas(Peca p){
         Map<String,Jogada> provaveisJogadas = new HashMap<>();
         Celula diagonalEsq;
         Celula diagonalEsqSeguinte;
@@ -111,18 +112,18 @@ class Tabuleiro {
         Celula diagonalDirSeguinte;
         
         if (p.getId().contains("pr")) { //verifica se a peça da vez é preta ou branca
-            diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];
-            diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];
-            diagonalDir = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];
-            diagonalDirSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];
+            try{diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];}catch(Exception e){diagonalEsq = null;}
+            try{diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];}catch(Exception e){diagonalEsqSeguinte = null;}
+            try{diagonalDir = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];}catch(Exception e){diagonalDir = null;}
+            try{diagonalDirSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];}catch(Exception e){diagonalDirSeguinte = null;}
         } else {
-            diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() - 1];
-            diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];
-            diagonalDir = tabuleiro[p.getPosX() + 1][p.getPosY() + 1];
-            diagonalDirSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() + 2];
+            try{diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() - 1];}catch(Exception e){diagonalEsq = null;}
+            try{diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];}catch(Exception e){diagonalEsqSeguinte = null;}
+            try{diagonalDir = tabuleiro[p.getPosX() + 1][p.getPosY() + 1];}catch(Exception e){diagonalDir = null;}
+            try{diagonalDirSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() + 2];}catch(Exception e){diagonalDirSeguinte = null;}
         }
         
-        if (p.getPosY() < 6 || p.getPosY() > 1) { //a peça não está próxima ou exatamente,
+        if (p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
                                                   //nas laterais
             if (diagonalEsq.isEmpty()) {
                 provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalEsq));
@@ -186,10 +187,37 @@ class Tabuleiro {
         
         return filtraJogadas(provaveisJogadas);
     }
+    
+    /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
+    ou captura, de uma dama. (FALTA ANALISAR CAPTURA PARA TRÁS)*/
+//    public Map<String,Jogada> verificaJogadasDama(Peca p){
+//        
+//    }
 
-    private Map<String, Jogada> filtraJogadas(Map<String, Jogada> provaveisJogadas) {
+    private ArrayList<Jogada> filtraJogadas(Map<String, Jogada> provaveisJogadas) {
         if(provaveisJogadas.containsKey("captura"))
             provaveisJogadas.remove("movimentacao");
-        return provaveisJogadas;
+        return new ArrayList<>(provaveisJogadas.values());
+    }
+    
+    public String fimDeJogo(){
+        String resp = "Fim de Jogo.";
+        if(brancas.isEmpty())
+            return resp+" Vencedor: PRETAS";
+        else {
+            if(pretas.isEmpty())
+                return resp+" Vencedor: BRANCAS";
+            else{
+                if(truncou())
+                    return resp+" Truncou!";
+                else
+                    return "";
+            }
+        }
+    }
+    
+    //ESTUDAR COMO VERIFICAR TRUNCAMENTO
+    private boolean truncou(){
+        return false;
     }
 }    
