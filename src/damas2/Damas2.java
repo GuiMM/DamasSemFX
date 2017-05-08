@@ -29,6 +29,7 @@ public class Damas2 {
         {
             rodadaHumano();
             //rodadaMaquina();
+            System.out.println();
             tabuleiro.printTabuleiro();
         }
     }
