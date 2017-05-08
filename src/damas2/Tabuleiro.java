@@ -7,7 +7,6 @@ package damas2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,14 +14,19 @@ import java.util.Map;
  * @author MQGuilherme
  */
 class Tabuleiro {
-    private final ArrayList <Peca> brancas = new ArrayList(12);
-    private final ArrayList <Peca> pretas = new ArrayList(12);
-    private final Celula[][] tabuleiro = new Celula[8][8];
+    private ArrayList <Peca> brancas = new ArrayList(12);
+    private ArrayList <Peca> pretas = new ArrayList(12);
+    private Celula[][] tabuleiro;
     
-    public Tabuleiro(){
+    public Tabuleiro(int tam){
+        tabuleiro = new Celula[tam][tam];
         inicializarTabuleiro();
         criaPecas();
         distribuiPecas();
+    }
+    
+    public Tabuleiro(){
+        
     }
     
     private void criaPecas(){
@@ -101,6 +105,18 @@ class Tabuleiro {
     public Celula[][] getTabuleiro() {
         return tabuleiro;
     }
+
+    public void setBrancas(ArrayList<Peca> brancas) {
+        this.brancas = brancas;
+    }
+
+    public void setPretas(ArrayList<Peca> pretas) {
+        this.pretas = pretas;
+    }
+
+    public void setTabuleiro(Celula[][] tabuleiro) {
+        this.tabuleiro = tabuleiro;
+    }
     
     /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
     ou captura, de uma peça comum. (FALTA ANALISAR CAPTURA PARA TRÁS)*/
@@ -112,10 +128,10 @@ class Tabuleiro {
         Celula diagonalDirSeguinte;
         
         if (p.getId().contains("pr")) { //verifica se a peça da vez é preta ou branca
-            try{diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];}catch(Exception e){diagonalEsq = null;}
-            try{diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];}catch(Exception e){diagonalEsqSeguinte = null;}
-            try{diagonalDir = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];}catch(Exception e){diagonalDir = null;}
-            try{diagonalDirSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];}catch(Exception e){diagonalDirSeguinte = null;}
+            try{diagonalDir = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];}catch(Exception e){diagonalDir = null;}
+            try{diagonalDirSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];}catch(Exception e){diagonalDirSeguinte = null;}
+            try{diagonalEsq = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];}catch(Exception e){diagonalEsq = null;}
+            try{diagonalEsqSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];}catch(Exception e){diagonalEsqSeguinte = null;}
         } else {
             try{diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() - 1];}catch(Exception e){diagonalEsq = null;}
             try{diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];}catch(Exception e){diagonalEsqSeguinte = null;}
@@ -203,21 +219,27 @@ class Tabuleiro {
     public String fimDeJogo(){
         String resp = "Fim de Jogo.";
         if(brancas.isEmpty())
-            return resp+" Vencedor: PRETAS";
+            return resp+" Vencedor: COMPUTADOR";
         else {
             if(pretas.isEmpty())
-                return resp+" Vencedor: BRANCAS";
+                return resp+" Vencedor: HUMANO";
             else{
-                if(truncou())
-                    return resp+" Truncou!";
-                else
-                    return "";
+                return "";
             }
         }
     }
     
-    //ESTUDAR COMO VERIFICAR TRUNCAMENTO
-    private boolean truncou(){
-        return false;
+    public Tabuleiro copiaTabuleiro(Tabuleiro t){
+        Tabuleiro novo = new Tabuleiro();
+        ArrayList<Peca> br = new ArrayList<>();
+        br = t.getBrancas();
+        novo.setBrancas(br);
+        ArrayList<Peca> pr = new ArrayList<>();
+        pr = t.getPretas();
+        novo.setBrancas(pr);
+        Celula[][] tab = new Celula[8][8];
+        tab = t.getTabuleiro();
+        novo.setTabuleiro(tab);
+        return novo;
     }
 }    

@@ -65,4 +65,14 @@ class Jogada {
     private void fazerDama(Peca aJogar){
         aJogar.setEh_dama(true);
     }
+    
+    @Override
+    public boolean equals(Object o){
+        boolean retVal = false;
+        if(o instanceof String){
+            String t = (String)o;
+            retVal = t.equals(this.tipo);
+        }
+        return retVal;
+    }
 }

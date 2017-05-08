@@ -19,7 +19,7 @@ public class Damas2 {
      */
     static Tabuleiro tabuleiro;
     public static void main(String[] args) {
-        tabuleiro = new Tabuleiro();
+        tabuleiro = new Tabuleiro(8);
         tabuleiro.printTabuleiro();
         
         while(!tabuleiro.fimDeJogo().contains("Fim de Jogo"))
@@ -40,16 +40,18 @@ public class Damas2 {
         Peca a_Jogar = daPeca_a_Jogar.getPeca();
         
         List<Jogada> jogadas = tabuleiro.verificaJogadas(a_Jogar);
-        for (int i = 0; i < jogadas.size(); i++) {
-            System.out.println(i+1+" - "+jogadas.get(i).getTipo()+"  "+
-                                        jogadas.get(i).getDestino().getX()+","+
-                                        jogadas.get(i).getDestino().getY());
-        }
-        
-        System.out.println("Digite o nº da jogada a ser feita:");
-        int nJogada = ler.nextInt();
-        
-        jogadas.get(nJogada-1).realizaJogada(tabuleiro, a_Jogar);
+        do{
+            for (int i = 0; i < jogadas.size(); i++) {
+                System.out.println(i+1+" - "+jogadas.get(i).getTipo()+"  "+
+                                            jogadas.get(i).getDestino().getX()+","+
+                                            jogadas.get(i).getDestino().getY());
+            }
+
+            System.out.println("Digite o nº da jogada a ser feita:");
+            int nJogada = ler.nextInt();
+
+            jogadas.get(nJogada-1).realizaJogada(tabuleiro, a_Jogar);
+        }while(jogadas.contains("captura"));
     }
     
 }
