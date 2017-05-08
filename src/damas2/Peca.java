@@ -35,7 +35,7 @@ class Peca {
         boolean eh_peca_branca;
         /*verifica qual o time do jogador, vamos fazer um método que pode ser
         usado pelo humano ou pelo PC*/
-        eh_peca_branca = jogador.equals("  Humano  ");   
+        eh_peca_branca = jogador.equals("H");   
         if (eh_peca_branca && posX==7) {
             eh_dama=true;
         }else if (!eh_peca_branca && posX==0) {

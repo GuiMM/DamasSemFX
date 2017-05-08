@@ -6,8 +6,6 @@
 package damas2;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -32,10 +30,10 @@ class Tabuleiro {
     private void criaPecas(){
         for (int i=0;i<24;i++){
             if(i>=12){
-                Peca pr = new Peca("pr"+i,"Computador");
+                Peca pr = new Peca("pr"+i,"C");
                 pretas.add(pr);
             }else{
-                Peca br = new Peca("br"+i,"  Humano  ");
+                Peca br = new Peca("br"+i,"H");
                 brancas.add(br);
             }
         }
@@ -56,13 +54,13 @@ class Tabuleiro {
                
                 if (i%2==0) {
                     brancas.get(aux).setPosX(i);
-                    brancas.get(aux).setPosY(j*2);
-                    tabuleiro[i][j*2].setPeca(brancas.get(aux));                   
+                    brancas.get(aux).setPosY(j*2+1);
+                    tabuleiro[i][j*2+1].setPeca(brancas.get(aux));                   
                 }else
                 {
                     brancas.get(aux).setPosX(i);
-                    brancas.get(aux).setPosY(j*2+1);
-                    tabuleiro[i][j*2+1].setPeca(brancas.get(aux));
+                    brancas.get(aux).setPosY(j*2);
+                    tabuleiro[i][j*2].setPeca(brancas.get(aux));
                 }
                 
                 if (i%2==0) {
@@ -118,102 +116,238 @@ class Tabuleiro {
         this.tabuleiro = tabuleiro;
     }
     
-    /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
-    ou captura, de uma peça comum. (FALTA ANALISAR CAPTURA PARA TRÁS)*/
     public ArrayList<Jogada> verificaJogadas(Peca p){
-        Map<String,Jogada> provaveisJogadas = new HashMap<>();
-        Celula diagonalEsq;
-        Celula diagonalEsqSeguinte;
-        Celula diagonalDir;
-        Celula diagonalDirSeguinte;
-        
-        if (p.getId().contains("pr")) { //verifica se a peça da vez é preta ou branca
-            try{diagonalDir = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];}catch(Exception e){diagonalDir = null;}
-            try{diagonalDirSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];}catch(Exception e){diagonalDirSeguinte = null;}
-            try{diagonalEsq = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];}catch(Exception e){diagonalEsq = null;}
-            try{diagonalEsqSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];}catch(Exception e){diagonalEsqSeguinte = null;}
-        } else {
-            try{diagonalEsq = tabuleiro[p.getPosX() - 1][p.getPosY() - 1];}catch(Exception e){diagonalEsq = null;}
-            try{diagonalEsqSeguinte = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];}catch(Exception e){diagonalEsqSeguinte = null;}
-            try{diagonalDir = tabuleiro[p.getPosX() + 1][p.getPosY() + 1];}catch(Exception e){diagonalDir = null;}
-            try{diagonalDirSeguinte = tabuleiro[p.getPosX() + 2][p.getPosY() + 2];}catch(Exception e){diagonalDirSeguinte = null;}
+        if(!p.eh_Dama()){
+            return filtraJogadas(avaliaJogadasPecaComum(p));
+        }else{
+            return filtraJogadas(avaliaJogadasDama(p));
         }
-        
-        if (p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
-                                                  //nas laterais
-            if (diagonalEsq.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalEsq));
-            } else if (!diagonalEsq.getPeca().getJogador().equals(p.getJogador())
-                       && diagonalEsqSeguinte.isEmpty()) {
-                Peca pecaCapturar = diagonalEsq.getPeca();
-                provaveisJogadas.put("captura",new Jogada("captura",diagonalEsqSeguinte,pecaCapturar));
-            }
-            
-            if (diagonalDir.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalDir));
-            } else if (!diagonalDir.getPeca().getJogador().equals(p.getJogador())
-                       && diagonalDirSeguinte.isEmpty()) {
-                Peca pecaCapturar = diagonalDir.getPeca();
-                provaveisJogadas.put("captura",new Jogada("captura",diagonalDirSeguinte,pecaCapturar));
-            }
-            
-        } else if (p.getPosY() == 0) { //a peça está na lateral esquerda
-            if (diagonalDir.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalDir));
-            } else if (!diagonalDir.getPeca().getJogador().equals(p.getJogador())
-                       && diagonalDirSeguinte.isEmpty()) {
-                Peca pecaCapturar = diagonalDir.getPeca();
-                provaveisJogadas.put("captura",new Jogada("captura",diagonalDirSeguinte,pecaCapturar));
-            }
-            
-        } else if (p.getPosY() == 7) { //a peça está na lateral direita
-            if (diagonalEsq.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalEsq));
-            } else if (!diagonalEsq.getPeca().getJogador().equals(p.getJogador())
-                       && diagonalEsqSeguinte.isEmpty()) {
-                Peca pecaCapturar = diagonalEsq.getPeca();
-                provaveisJogadas.put("captura",new Jogada("captura",diagonalEsqSeguinte,pecaCapturar));
-            }
-        } else if(p.getPosY()== 1){ //a peça está próxima a lateral esquerda
-            if (diagonalEsq.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalEsq));
-            }
-            
-            if (diagonalDir.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalDir));
-            } else if (!diagonalDir.getPeca().getJogador().equals(p.getJogador())
-                       && diagonalDirSeguinte.isEmpty()) {
-                Peca pecaCapturar = diagonalDir.getPeca();
-                provaveisJogadas.put("captura",new Jogada("captura",diagonalDirSeguinte,pecaCapturar));
-            }
-            
-        } else if(p.getPosY()== 6){ //a peça está próxima a lateral direita
-            if (diagonalEsq.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalEsq));
-            } else if (!diagonalEsq.getPeca().getJogador().equals(p.getJogador())
-                       && diagonalEsqSeguinte.isEmpty()) {
-                Peca pecaCapturar = diagonalEsq.getPeca();
-                provaveisJogadas.put("captura",new Jogada("captura",diagonalEsqSeguinte,pecaCapturar));
-            }
-            
-            if (diagonalDir.isEmpty()) {
-                provaveisJogadas.put("movimentacao",new Jogada("movimentacao",diagonalDir));
+    }
+    
+    private ArrayList<Jogada> verificaCaptura(ArrayList<Jogada> jogadas, 
+                                Celula frente, Celula frenteSeguinte, 
+                                Celula tras, Celula trasSeguinte, Peca p){
+        if(!frente.getPeca().getJogador().equals(p.getJogador())
+           && frenteSeguinte.isEmpty()){
+            Peca pecaCapturar = frente.getPeca();
+            jogadas.add(new Jogada("captura",frenteSeguinte,pecaCapturar));
+        }
+        if(tras!=null && trasSeguinte!=null){//no caso da dama, estas células são nulas para este método
+            if(!tras.getPeca().getJogador().equals(p.getJogador())
+               && trasSeguinte.isEmpty()){
+                Peca pecaCapturar = tras.getPeca();
+                jogadas.add(new Jogada("captura",trasSeguinte,pecaCapturar));
             }
         }
         
-        return filtraJogadas(provaveisJogadas);
+        return jogadas;
     }
     
     /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
-    ou captura, de uma dama. (FALTA ANALISAR CAPTURA PARA TRÁS)*/
-//    public Map<String,Jogada> verificaJogadasDama(Peca p){
-//        
-//    }
+    ou captura, de uma peça comum.*/
+    private ArrayList<Jogada> avaliaJogadasPecaComum(Peca p){
+        ArrayList<Jogada> provaveisJogadas = new ArrayList<>();
+        Celula diagonalEsqFrente;
+        Celula diagonalEsqFrenteSeg;
+        Celula diagonalDirFrente;
+        Celula diagonalDirFrenteSeg;
+        Celula diagonalEsqTras;
+        Celula diagonalDirTras;
+        Celula diagonalEsqTrasSeg;
+        Celula diagonalDirTrasSeg;
 
-    private ArrayList<Jogada> filtraJogadas(Map<String, Jogada> provaveisJogadas) {
-        if(provaveisJogadas.containsKey("captura"))
-            provaveisJogadas.remove("movimentacao");
-        return new ArrayList<>(provaveisJogadas.values());
+        if (p.getId().contains("pr")) { //verifica se a peça da vez é preta ou branca
+            try {diagonalDirFrente = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];} catch (Exception e) {diagonalDirFrente = null;}
+            try {diagonalDirFrenteSeg = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];} catch (Exception e) {diagonalDirFrenteSeg = null;}
+            try {diagonalEsqFrente = tabuleiro[p.getPosX() - 1][p.getPosY() - 1];} catch (Exception e) {diagonalEsqFrente = null;}
+            try {diagonalEsqFrenteSeg = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];} catch (Exception e) {diagonalEsqFrenteSeg = null;}
+            try {diagonalDirTras = tabuleiro[p.getPosX() + 1][p.getPosY() + 1];} catch (Exception e) {diagonalDirTras = null;}
+            try {diagonalEsqTras = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];} catch (Exception e) {diagonalEsqTras = null;}
+            try {diagonalDirTrasSeg = tabuleiro[p.getPosX() + 2][p.getPosY() + 2];} catch (Exception e) {diagonalDirTrasSeg = null;}
+            try {diagonalEsqTrasSeg = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];} catch (Exception e) {diagonalEsqTrasSeg = null;}
+        } else {
+            try {diagonalEsqFrente = tabuleiro[p.getPosX() + 1][p.getPosY() - 1];} catch (Exception e) {diagonalEsqFrente = null;}
+            try {diagonalEsqFrenteSeg = tabuleiro[p.getPosX() + 2][p.getPosY() - 2];} catch (Exception e) {diagonalEsqFrenteSeg = null;}
+            try {diagonalDirFrente = tabuleiro[p.getPosX() + 1][p.getPosY() + 1];} catch (Exception e) {diagonalDirFrente = null;}
+            try {diagonalDirFrenteSeg = tabuleiro[p.getPosX() + 2][p.getPosY() + 2];} catch (Exception e) {diagonalDirFrenteSeg = null;}
+            try {diagonalDirTras = tabuleiro[p.getPosX() - 1][p.getPosY() + 1];} catch (Exception e) {diagonalDirTras = null;}
+            try {diagonalEsqTras = tabuleiro[p.getPosX() - 1][p.getPosY() - 1];} catch (Exception e) {diagonalEsqTras = null;}
+            try {diagonalDirTrasSeg = tabuleiro[p.getPosX() - 2][p.getPosY() + 2];} catch (Exception e) {diagonalDirTrasSeg = null;}
+            try {diagonalEsqTrasSeg = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];} catch (Exception e) {diagonalEsqTrasSeg = null;}
+        }
+
+        if (p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
+            //nas laterais
+            if (diagonalEsqFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
+            } else {
+                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
+                        diagonalEsqTras, diagonalEsqTrasSeg, p);
+                if(temp!=null)
+                    provaveisJogadas.addAll(temp);
+            }
+
+            if (diagonalDirFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
+            } else {
+                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
+                        diagonalDirTras, diagonalDirTrasSeg, p);
+                if(temp!=null)
+                    provaveisJogadas.addAll(temp);
+            }
+
+        } else if (p.getPosY() == 0) { //a peça está na lateral esquerda
+            if (diagonalDirFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
+            } else {
+                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
+                        diagonalDirTras, diagonalDirTrasSeg, p);
+                if(temp!=null)
+                    provaveisJogadas.addAll(temp);
+            }
+
+        } else if (p.getPosY() == 7) { //a peça está na lateral direita
+            if (diagonalEsqFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
+            } else {
+                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
+                        diagonalEsqTras, diagonalEsqTrasSeg, p);
+                if(temp!=null)
+                    provaveisJogadas.addAll(temp);
+            }
+        } else if (p.getPosY() == 1) { //a peça está próxima a lateral esquerda
+            if (diagonalEsqFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
+            }
+
+            if (diagonalDirFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
+            } else {
+                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
+                        diagonalDirTras, diagonalDirTrasSeg, p);
+                if(temp!=null)
+                    provaveisJogadas.addAll(temp);
+            }
+
+        } else if (p.getPosY() == 6) { //a peça está próxima a lateral direita
+            if (diagonalEsqFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
+            } else {
+                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
+                        diagonalEsqTras, diagonalEsqTrasSeg, p);
+                if(temp!=null)
+                    provaveisJogadas.addAll(temp);
+            }
+
+            if (diagonalDirFrente.isEmpty()) {
+                provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
+            }
+        }
+        return provaveisJogadas;
+    }
+    
+    /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
+    ou captura, de uma dama.*/
+    private ArrayList<Jogada> avaliaJogadasDama(Peca p){
+        ArrayList<Jogada> provaveisJogadas = new ArrayList<>();
+        Celula atual = tabuleiro[p.getPosX()][p.getPosY()];
+        Celula aux = atual;
+        for (int i = 1; i < 5; i++) { //controle para percorrimento das 4 direções
+            //(1->diagonalEsqFrente, 2->diagonalDirFrente, 3->diagonalDirTras, 4->diagonalEsqTras)
+            switch (i) {
+                case 1:
+                    while(true){
+                        aux.setX(aux.getX()-1);
+                        aux.setY(aux.getY()-1);
+                        if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
+                            if(aux.isEmpty())
+                                provaveisJogadas.add(new Jogada("movimentacao",aux));
+                            else{
+                                Celula seguinte;
+                                try{seguinte = tabuleiro[aux.getX()-1][aux.getY()-1];}catch(Exception e){seguinte = null;}
+                                if(seguinte!=null)
+                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                break;
+                            }
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    while(true){
+                        aux.setX(aux.getX()-1);
+                        aux.setY(aux.getY()+1);
+                        if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
+                            if(aux.isEmpty())
+                                provaveisJogadas.add(new Jogada("movimentacao",aux));
+                            else{
+                                Celula seguinte;
+                                try{seguinte = tabuleiro[aux.getX()-1][aux.getY()+1];}catch(Exception e){seguinte = null;}
+                                if(seguinte!=null)
+                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                break;
+                            }
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    while(true){
+                        aux.setX(aux.getX()+1);
+                        aux.setY(aux.getY()+1);
+                        if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
+                            if(aux.isEmpty())
+                                provaveisJogadas.add(new Jogada("movimentacao",aux));
+                            else{
+                                Celula seguinte;
+                                try{seguinte = tabuleiro[aux.getX()+1][aux.getY()+1];}catch(Exception e){seguinte = null;}
+                                if(seguinte!=null)
+                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                break;
+                            }
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                    break;
+                case 4:
+                    while(true){
+                        aux.setX(aux.getX()+1);
+                        aux.setY(aux.getY()-1);
+                        if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
+                            if(aux.isEmpty())
+                                provaveisJogadas.add(new Jogada("movimentacao",aux));
+                            else{
+                                Celula seguinte;
+                                try{seguinte = tabuleiro[aux.getX()+1][aux.getY()-1];}catch(Exception e){seguinte = null;}
+                                if(seguinte!=null)
+                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                break;
+                            }
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                    break;
+            }
+        }
+        return provaveisJogadas;   
+    }
+
+    private ArrayList<Jogada> filtraJogadas(ArrayList<Jogada> provaveisJogadas) {
+        if(provaveisJogadas.contains("captura")){
+            for (int i = 0; i < provaveisJogadas.size(); i++) {
+                if(provaveisJogadas.get(i).getTipo().equals("movimentação"))
+                    provaveisJogadas.remove(i);
+            }
+        }
+        return provaveisJogadas;
     }
     
     public String fimDeJogo(){
