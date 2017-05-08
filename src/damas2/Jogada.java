@@ -57,6 +57,7 @@ class Jogada {
     private void movimentar(Tabuleiro t, Peca aJogar){
         t.getTabuleiro()[destino.getX()][destino.getY()].setPeca(aJogar);
         t.getTabuleiro()[aJogar.getPosX()][aJogar.getPosY()].setPeca(null);
+        aJogar.setPosX(destino.getX()); aJogar.setPosY(destino.getY());         //atualizando a posicao da peca
         if((aJogar.getPosX()==0 && aJogar.getId().contains("pr"))||
            (aJogar.getPosX()==7 && aJogar.getId().contains("br")))
             fazerDama(aJogar);

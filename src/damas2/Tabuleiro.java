@@ -378,7 +378,7 @@ class Tabuleiro {
         novo.setBrancas(br);
         ArrayList<Peca> pr = new ArrayList<>();
         for (int i = 0; i < pretas.size(); i++) {
-            br.add(pretas.get(i));
+            pr.add(pretas.get(i));
         }
         novo.setPretas(pr);
         Celula[][] tab = new Celula[8][8];

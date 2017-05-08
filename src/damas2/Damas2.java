@@ -28,27 +28,30 @@ public class Damas2 {
         while(!tabuleiro.fimDeJogo().contains("Fim de Jogo"))
         {
             rodadaHumano();
-            //rodadaMaquina();
+            rodadaMaquina();
             System.out.println();
             tabuleiro.printTabuleiro();
         }
     }
 
-    private void AlphaBetaSearch(Tabuleiro tabuleiro, Peca jogador){
+    private static void rodadaMaquina() {
+        alphaBetaSearch(tabuleiro);
+    }
+
+    private static void alphaBetaSearch(Tabuleiro tabuleiro){
         Tabuleiro copia = new Tabuleiro();
         copia = tabuleiro.copiaTabuleiro();
-        Node v;
-        v = maxValue(copia, -100000, +100000);
-        v.Tipo_Jogada.realizaJogada(tabuleiro, jogador);
+        Tabuleiro retorno;
+        retorno = maxValue(copia, -100000, +100000);
+        tabuleiro=retorno.copiaTabuleiro();
     }
     
-    private Node maxValue(Tabuleiro copia, int alfa, int beta) {
-        Node atual = new Node();
+    private static Tabuleiro maxValue(Tabuleiro copia, int alfa, int beta) {
         ArrayList <Tabuleiro> possibilidades = new ArrayList<>();
+        Tabuleiro retorno=null;
         int v = -100000;
         if (copia.getPretas().isEmpty()||copia.getBrancas().isEmpty()) {
-            atual.jogada = copia;
-            return atual;
+            return copia;
         }
        // vendo todas as possivei jogadas para cada peca preta no tabuleiro
         for (int i = 0; i < copia.getPretas().size(); i++) {
@@ -61,7 +64,54 @@ public class Damas2 {
             }
         }
         
-                
+        for (int i = 0; i < possibilidades.size(); i++) {
+            Tabuleiro no_retornado = minValue(possibilidades.get(i),alfa,beta);
+            if (v<no_retornado.funcaoDeAvaliacao()) {
+                retorno =no_retornado;
+                v=no_retornado.funcaoDeAvaliacao();
+            }
+            if (v>=beta) 
+                return retorno;
+            
+            if (alfa<v) 
+                alfa=v;
+            
+        }
+        
+         return retorno;       
+    }
+    
+    private static Tabuleiro minValue(Tabuleiro copia, int alfa, int beta) {
+        ArrayList <Tabuleiro> possibilidades = new ArrayList<>();
+        Tabuleiro retorno=null;
+        int v = 100000;
+        if (copia.getPretas().isEmpty()||copia.getBrancas().isEmpty()) {
+            return copia;
+        }
+       // vendo todas as possivei jogadas para cada peca preta no tabuleiro
+        for (int i = 0; i < copia.getBrancas().size(); i++) {
+            Peca peca = copia.getBrancas().get(i);
+            ArrayList<Jogada> possibilidades_da_peca = copia.verificaJogadas(peca);
+            for (int j = 0; j < possibilidades_da_peca.size(); j++) {
+                Tabuleiro copia2 = copia.copiaTabuleiro();
+                possibilidades_da_peca.get(j).realizaJogada(copia2, peca);
+                possibilidades.add(copia2);
+            }
+        }
+        
+        for (int i = 0; i < possibilidades.size(); i++) {
+            Tabuleiro no_retornado = maxValue(possibilidades.get(i),alfa,beta);
+            if (v>no_retornado.funcaoDeAvaliacao()) {
+                retorno =no_retornado;
+                v=no_retornado.funcaoDeAvaliacao();
+            }
+            if (v<=alfa) 
+                return retorno;
+            
+            if (alfa>v) 
+                alfa=v;
+        }
+        return retorno;
     }
     
     private static void rodadaHumano() {
@@ -87,6 +137,8 @@ public class Damas2 {
             jogadas.get(nJogada-1).realizaJogada(tabuleiro, a_Jogar);
         }while(jogadas.contains("captura"));
     }
+
+    
 
     
     
