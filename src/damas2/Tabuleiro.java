@@ -116,6 +116,12 @@ class Tabuleiro {
         this.tabuleiro = tabuleiro;
     }
     
+    public int funcaoDeAvaliacao(){
+        int result =0;        
+        result = pretas.size()-brancas.size();
+        return result;
+    }
+    
     public ArrayList<Jogada> verificaJogadas(Peca p){
         if(!p.eh_Dama()){
             return filtraJogadas(avaliaJogadasPecaComum(p));
@@ -363,16 +369,24 @@ class Tabuleiro {
         }
     }
     
-    public Tabuleiro copiaTabuleiro(Tabuleiro t){
+    public Tabuleiro copiaTabuleiro(){
         Tabuleiro novo = new Tabuleiro();
         ArrayList<Peca> br = new ArrayList<>();
-        br = t.getBrancas();
+        for (int i = 0; i < brancas.size(); i++) {
+            br.add(brancas.get(i));
+        }
         novo.setBrancas(br);
         ArrayList<Peca> pr = new ArrayList<>();
-        pr = t.getPretas();
-        novo.setBrancas(pr);
+        for (int i = 0; i < pretas.size(); i++) {
+            br.add(pretas.get(i));
+        }
+        novo.setPretas(pr);
         Celula[][] tab = new Celula[8][8];
-        tab = t.getTabuleiro();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                tab[i][j]=tabuleiro[i][j];
+            }
+        }       
         novo.setTabuleiro(tab);
         return novo;
     }
