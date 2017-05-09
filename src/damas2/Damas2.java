@@ -49,10 +49,11 @@ public class Damas2 {
     private static Tabuleiro maxValue(Tabuleiro copia, int alfa, int beta) {
         ArrayList <Tabuleiro> possibilidades = new ArrayList<>();
         Tabuleiro retorno=null;
-        int v = -100000;
+        int v = Integer.MIN_VALUE;
         if (copia.getPretas().isEmpty()||copia.getBrancas().isEmpty()) {
             return copia;
         }
+        
        // vendo todas as possivei jogadas para cada peca preta no tabuleiro
         for (int i = 0; i < copia.getPretas().size(); i++) {
             Peca peca = copia.getPretas().get(i);
@@ -61,6 +62,9 @@ public class Damas2 {
                 Tabuleiro copia2 = copia.copiaTabuleiro();
                 possibilidades_da_peca.get(j).realizaJogada(copia2, peca);
                 possibilidades.add(copia2);
+                copia2.printTabuleiro();
+                System.out.println();
+                System.out.println();
             }
         }
         
@@ -84,10 +88,11 @@ public class Damas2 {
     private static Tabuleiro minValue(Tabuleiro copia, int alfa, int beta) {
         ArrayList <Tabuleiro> possibilidades = new ArrayList<>();
         Tabuleiro retorno=null;
-        int v = 100000;
+        int v = Integer.MAX_VALUE;
         if (copia.getPretas().isEmpty()||copia.getBrancas().isEmpty()) {
             return copia;
         }
+        
        // vendo todas as possivei jogadas para cada peca preta no tabuleiro
         for (int i = 0; i < copia.getBrancas().size(); i++) {
             Peca peca = copia.getBrancas().get(i);
@@ -96,6 +101,10 @@ public class Damas2 {
                 Tabuleiro copia2 = copia.copiaTabuleiro();
                 possibilidades_da_peca.get(j).realizaJogada(copia2, peca);
                 possibilidades.add(copia2);
+                                
+                copia2.printTabuleiro();
+                System.out.println();
+                System.out.println();                
             }
         }
         

@@ -41,7 +41,7 @@ class Tabuleiro {
     
     private void inicializarTabuleiro(){
         for(int i = 0; i < tabuleiro.length; i++){
-            for(int j = 0; j < tabuleiro[i].length; j++){
+            for(int j = 0; j < tabuleiro[0].length; j++){
                 tabuleiro[i][j] = new Celula(i,j);
             }
         }
@@ -133,12 +133,14 @@ class Tabuleiro {
     private ArrayList<Jogada> verificaCaptura(ArrayList<Jogada> jogadas, 
                                 Celula frente, Celula frenteSeguinte, 
                                 Celula tras, Celula trasSeguinte, Peca p){
-        if(!frente.getPeca().getJogador().equals(p.getJogador())
+        if(frente!=null && frente.getPeca()!=null && frenteSeguinte!=null){
+            if(!frente.getPeca().getJogador().equals(p.getJogador())
            && frenteSeguinte.isEmpty()){
-            Peca pecaCapturar = frente.getPeca();
-            jogadas.add(new Jogada("captura",frenteSeguinte,pecaCapturar));
+                Peca pecaCapturar = frente.getPeca();
+                jogadas.add(new Jogada("captura",frenteSeguinte,pecaCapturar));
+            }
         }
-        if(tras!=null && trasSeguinte!=null){//no caso da dama, estas células são nulas para este método
+        if(tras!=null && tras.getPeca()!=null && trasSeguinte!=null){//no caso da dama, estas células são nulas para este método
             if(!tras.getPeca().getJogador().equals(p.getJogador())
                && trasSeguinte.isEmpty()){
                 Peca pecaCapturar = tras.getPeca();
@@ -182,7 +184,7 @@ class Tabuleiro {
             try {diagonalEsqTrasSeg = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];} catch (Exception e) {diagonalEsqTrasSeg = null;}
         }
 
-        if (p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
+        if (p.getPosY() < 8 && p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
             //nas laterais
             if (diagonalEsqFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
@@ -256,13 +258,14 @@ class Tabuleiro {
     ou captura, de uma dama.*/
     private ArrayList<Jogada> avaliaJogadasDama(Peca p){
         ArrayList<Jogada> provaveisJogadas = new ArrayList<>();
-        Celula atual = tabuleiro[p.getPosX()][p.getPosY()];
-        Celula aux = atual;
+        //Celula atual = new Celula(p.getPosX(),p.getPosY());//tabuleiro[p.getPosX()][p.getPosY()];
+        Celula aux; //= atual;
         for (int i = 1; i < 5; i++) { //controle para percorrimento das 4 direções
             //(1->diagonalEsqFrente, 2->diagonalDirFrente, 3->diagonalDirTras, 4->diagonalEsqTras)
             switch (i) {
                 case 1:
                     while(true){
+                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
                         aux.setX(aux.getX()-1);
                         aux.setY(aux.getY()-1);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
@@ -283,6 +286,7 @@ class Tabuleiro {
                     break;
                 case 2:
                     while(true){
+                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
                         aux.setX(aux.getX()-1);
                         aux.setY(aux.getY()+1);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
@@ -303,6 +307,7 @@ class Tabuleiro {
                     break;
                 case 3:
                     while(true){
+                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
                         aux.setX(aux.getX()+1);
                         aux.setY(aux.getY()+1);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
@@ -323,6 +328,7 @@ class Tabuleiro {
                     break;
                 case 4:
                     while(true){
+                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
                         aux.setX(aux.getX()+1);
                         aux.setY(aux.getY()-1);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
@@ -371,23 +377,34 @@ class Tabuleiro {
     
     public Tabuleiro copiaTabuleiro(){
         Tabuleiro novo = new Tabuleiro();
+        novo.tabuleiro = new Celula[8][8];
         ArrayList<Peca> br = new ArrayList<>();
         for (int i = 0; i < brancas.size(); i++) {
-            br.add(brancas.get(i));
+            Peca aux = new Peca(brancas.get(i).getId(),brancas.get(i).getJogador());
+            br.add(aux);
+            aux.move(brancas.get(i).getPosX(), brancas.get(i).getPosY());
         }
         novo.setBrancas(br);
         ArrayList<Peca> pr = new ArrayList<>();
         for (int i = 0; i < pretas.size(); i++) {
-            pr.add(pretas.get(i));
+            Peca aux = new Peca(pretas.get(i).getId(),pretas.get(i).getJogador());
+            pr.add(aux);
+            aux.move(pretas.get(i).getPosX(), pretas.get(i).getPosY());
         }
         novo.setPretas(pr);
-        Celula[][] tab = new Celula[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                tab[i][j]=tabuleiro[i][j];
-            }
-        }       
-        novo.setTabuleiro(tab);
+        novo.inicializarTabuleiro();
+        //novo.distribuiPecas();
+        int k = 0;
+        while(k != brancas.size()){
+            int l = brancas.get(k).getPosX();
+            int c = brancas.get(k).getPosY();
+            novo.tabuleiro[l][c].setPeca(brancas.get(k)); 
+            l = pretas.get(k).getPosX();
+            c = pretas.get(k).getPosY();
+            novo.tabuleiro[l][c].setPeca(pretas.get(k));
+            k++;
+        }
+       
         return novo;
     }
 }    
