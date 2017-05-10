@@ -126,23 +126,11 @@ class Tabuleiro {
     
     public void printTabuleiro(){
         for (int i = 0; i < 8; i++) {
-            if(i==0)
-                System.out.print("       "+i+"    ");
-            else
-                System.out.print("   "+i+"    ");
-        }
-        System.out.println();
-        for (int i = 0; i < 8; i++) {
-            System.out.print(i+"  ");
             for (int j = 0; j < 8; j++) {
                 if (tabuleiro[i][j].isEmpty()) {
-                    System.out.print( "  ____  " );
-                }else{
-                    if(tabuleiro[i][j].getPeca().getId().length()==3)
-                        System.out.print("   "+tabuleiro[i][j].getPeca().getId()+"  ");  
-                    else
-                        System.out.print("  "+tabuleiro[i][j].getPeca().getId()+"  ");  
-                }
+                    System.out.print( " __________ " );
+                }else
+                    System.out.print("   "+tabuleiro[i][j].getPeca().getId()+""+ "(" + tabuleiro[i][j].getX() + "," + tabuleiro[i][j].getY() + ") " );   
             }
             System.out.println("\n");
         }
@@ -529,8 +517,8 @@ class Tabuleiro {
         
         return tab;
     }
-    
-    public ArrayList<Tabuleiro> possiveisProximasJogadas(){
+
+	public ArrayList<Tabuleiro> possiveisProximasJogadas(){
         ArrayList<Tabuleiro> possiveisJogadas = new ArrayList<>();
         for (int i = 0; i < getPretas().size(); i++) {
             Peca peca = getPretas().get(i);

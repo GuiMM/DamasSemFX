@@ -13,7 +13,6 @@ class Celula {
     private Peca p;
     private int x;
     private int y;
-    private int peso;
     
     public Celula(int x, int y){
         this.x = x;
@@ -43,15 +42,6 @@ class Celula {
     public void setY(int y){
         this.y = y;
     }
-
-    public int getPeso() {
-        return peso;
-    }
-
-    public void setPeso(int peso) {
-        this.peso = peso;
-    }
-    
     
     public boolean isEmpty(){
         return p == null;

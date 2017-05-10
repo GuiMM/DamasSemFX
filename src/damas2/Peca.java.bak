@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 class Peca {
     
-    private String id;
+    private final String id;
     private String jogador;
     private boolean eh_dama;
     private int posX;
@@ -81,10 +81,6 @@ class Peca {
         this.posY = posY;
     }
 
-    public String getId() {
-        return id;
-    }
-    
     @Override
     public boolean equals(Object o){
         boolean result = false;

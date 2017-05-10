@@ -8,6 +8,7 @@ package damas2;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -132,8 +133,8 @@ public class Damas2 {
             }
         }
     }
-    
-    public static int alfaBeta(Tabuleiro t, int depth, int alfa, int beta, boolean maximizingPlayer) {
+
+	public static int alfaBeta(Tabuleiro t, int depth, int alfa, int beta, boolean maximizingPlayer) {
         ArrayList<Tabuleiro> possibilidades = new ArrayList<>();
         int v;
         if (t.getPretas().isEmpty() || t.getBrancas().isEmpty() || depth == 0) {
