@@ -30,10 +30,10 @@ class Tabuleiro {
     private void criaPecas(){
         for (int i=0;i<24;i++){
             if(i>=12){
-                Peca pr = new Peca("pr"+i,"C");
+                Peca pr = new Peca("pr"+((i+1)-12),"C");
                 pretas.add(pr);
             }else{
-                Peca br = new Peca("br"+i,"H");
+                Peca br = new Peca("br"+(i+1),"H");
                 brancas.add(br);
             }
         }
@@ -80,13 +80,28 @@ class Tabuleiro {
         }
     }
     
+    @Override
+    public String toString(){
+        String resp = "";
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (tabuleiro[i][j].isEmpty()) {
+                    resp+=" ______ ";
+                }else
+                    resp+=" "+tabuleiro[i][j].getPeca().getId()+" "+ "(" + tabuleiro[i][j].getX() + "," + tabuleiro[i][j].getY() + ")";   
+            }
+            resp+="\n";
+        }
+        return resp;
+    }
+    
     public void printTabuleiro(){
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (tabuleiro[i][j].isEmpty()) {
                     System.out.print( " ______ " );
                 }else
-                    System.out.print(" "+tabuleiro[i][j].getPeca().getJogador()+" "+ "(" + tabuleiro[i][j].getX() + "," + tabuleiro[i][j].getY() + ")" );   
+                    System.out.print(" "+tabuleiro[i][j].getPeca().getId()+" "+ "(" + tabuleiro[i][j].getX() + "," + tabuleiro[i][j].getY() + ")" );   
             }
             System.out.println("\n");
         }
@@ -130,7 +145,7 @@ class Tabuleiro {
         }
     }
     
-    private ArrayList<Jogada> verificaCaptura(ArrayList<Jogada> jogadas, 
+    private void verificaCaptura(ArrayList<Jogada> jogadas, 
                                 Celula frente, Celula frenteSeguinte, 
                                 Celula tras, Celula trasSeguinte, Peca p){
         if(frente!=null && frente.getPeca()!=null && frenteSeguinte!=null){
@@ -147,8 +162,6 @@ class Tabuleiro {
                 jogadas.add(new Jogada("captura",trasSeguinte,pecaCapturar));
             }
         }
-        
-        return jogadas;
     }
     
     /*Método responsável por gerar uma lista de possíveis jogadas de movimentação
@@ -184,44 +197,36 @@ class Tabuleiro {
             try {diagonalEsqTrasSeg = tabuleiro[p.getPosX() - 2][p.getPosY() - 2];} catch (Exception e) {diagonalEsqTrasSeg = null;}
         }
 
-        if (p.getPosY() < 8 && p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
+        if (p.getPosY() < 6 && p.getPosY() > 1) { //a peça não está próxima ou exatamente,
             //nas laterais
             if (diagonalEsqFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
             } else {
-                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
+                verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
                         diagonalEsqTras, diagonalEsqTrasSeg, p);
-                if(temp!=null)
-                    provaveisJogadas.addAll(temp);
             }
 
             if (diagonalDirFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
             } else {
-                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
+                verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
                         diagonalDirTras, diagonalDirTrasSeg, p);
-                if(temp!=null)
-                    provaveisJogadas.addAll(temp);
             }
 
         } else if (p.getPosY() == 0) { //a peça está na lateral esquerda
             if (diagonalDirFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
             } else {
-                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
+                verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
                         diagonalDirTras, diagonalDirTrasSeg, p);
-                if(temp!=null)
-                    provaveisJogadas.addAll(temp);
             }
 
         } else if (p.getPosY() == 7) { //a peça está na lateral direita
             if (diagonalEsqFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
             } else {
-                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
+                verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
                         diagonalEsqTras, diagonalEsqTrasSeg, p);
-                if(temp!=null)
-                    provaveisJogadas.addAll(temp);
             }
         } else if (p.getPosY() == 1) { //a peça está próxima a lateral esquerda
             if (diagonalEsqFrente.isEmpty()) {
@@ -231,20 +236,16 @@ class Tabuleiro {
             if (diagonalDirFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalDirFrente));
             } else {
-                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
+                verificaCaptura(provaveisJogadas, diagonalDirFrente, diagonalDirFrenteSeg,
                         diagonalDirTras, diagonalDirTrasSeg, p);
-                if(temp!=null)
-                    provaveisJogadas.addAll(temp);
             }
 
         } else if (p.getPosY() == 6) { //a peça está próxima a lateral direita
             if (diagonalEsqFrente.isEmpty()) {
                 provaveisJogadas.add(new Jogada("movimentacao", diagonalEsqFrente));
             } else {
-                ArrayList<Jogada> temp = verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
+                verificaCaptura(provaveisJogadas, diagonalEsqFrente, diagonalEsqFrenteSeg,
                         diagonalEsqTras, diagonalEsqTrasSeg, p);
-                if(temp!=null)
-                    provaveisJogadas.addAll(temp);
             }
 
             if (diagonalDirFrente.isEmpty()) {
@@ -258,16 +259,16 @@ class Tabuleiro {
     ou captura, de uma dama.*/
     private ArrayList<Jogada> avaliaJogadasDama(Peca p){
         ArrayList<Jogada> provaveisJogadas = new ArrayList<>();
-        //Celula atual = new Celula(p.getPosX(),p.getPosY());//tabuleiro[p.getPosX()][p.getPosY()];
-        Celula aux; //= atual;
+        Celula aux = new Celula(p.getPosX(),p.getPosY());
+        int tempPosX,tempPosY;
         for (int i = 1; i < 5; i++) { //controle para percorrimento das 4 direções
             //(1->diagonalEsqFrente, 2->diagonalDirFrente, 3->diagonalDirTras, 4->diagonalEsqTras)
             switch (i) {
                 case 1:
                     while(true){
-                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
-                        aux.setX(aux.getX()-1);
-                        aux.setY(aux.getY()-1);
+                        tempPosX = aux.getX()-1;
+                        tempPosY = aux.getY()-1;
+                        aux = new Celula(tempPosX,tempPosY);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
                             if(aux.isEmpty())
                                 provaveisJogadas.add(new Jogada("movimentacao",aux));
@@ -275,7 +276,7 @@ class Tabuleiro {
                                 Celula seguinte;
                                 try{seguinte = tabuleiro[aux.getX()-1][aux.getY()-1];}catch(Exception e){seguinte = null;}
                                 if(seguinte!=null)
-                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                    verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p);
                                 break;
                             }
                         }
@@ -286,9 +287,9 @@ class Tabuleiro {
                     break;
                 case 2:
                     while(true){
-                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
-                        aux.setX(aux.getX()-1);
-                        aux.setY(aux.getY()+1);
+                        tempPosX = aux.getX()-1;
+                        tempPosY = aux.getY()+1;
+                        aux = new Celula(tempPosX,tempPosY);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
                             if(aux.isEmpty())
                                 provaveisJogadas.add(new Jogada("movimentacao",aux));
@@ -296,7 +297,7 @@ class Tabuleiro {
                                 Celula seguinte;
                                 try{seguinte = tabuleiro[aux.getX()-1][aux.getY()+1];}catch(Exception e){seguinte = null;}
                                 if(seguinte!=null)
-                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                    verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p);
                                 break;
                             }
                         }
@@ -307,9 +308,9 @@ class Tabuleiro {
                     break;
                 case 3:
                     while(true){
-                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
-                        aux.setX(aux.getX()+1);
-                        aux.setY(aux.getY()+1);
+                        tempPosX = aux.getX()+1;
+                        tempPosY = aux.getY()+1;
+                        aux = new Celula(tempPosX,tempPosY);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
                             if(aux.isEmpty())
                                 provaveisJogadas.add(new Jogada("movimentacao",aux));
@@ -317,7 +318,7 @@ class Tabuleiro {
                                 Celula seguinte;
                                 try{seguinte = tabuleiro[aux.getX()+1][aux.getY()+1];}catch(Exception e){seguinte = null;}
                                 if(seguinte!=null)
-                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                    verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p);
                                 break;
                             }
                         }
@@ -328,9 +329,9 @@ class Tabuleiro {
                     break;
                 case 4:
                     while(true){
-                        aux = new Celula(p.getPosX(),p.getPosY()); // antes estava aux = atual
-                        aux.setX(aux.getX()+1);
-                        aux.setY(aux.getY()-1);
+                        tempPosX = aux.getX()+1;
+                        tempPosY = aux.getY()-1;
+                        aux = new Celula(tempPosX,tempPosY);
                         if((aux.getX()>=0 && aux.getX()<=7) && (aux.getY()>=0 && aux.getY()<=7)){
                             if(aux.isEmpty())
                                 provaveisJogadas.add(new Jogada("movimentacao",aux));
@@ -338,7 +339,7 @@ class Tabuleiro {
                                 Celula seguinte;
                                 try{seguinte = tabuleiro[aux.getX()+1][aux.getY()-1];}catch(Exception e){seguinte = null;}
                                 if(seguinte!=null)
-                                    provaveisJogadas.addAll(verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p));
+                                    verificaCaptura(provaveisJogadas,aux,seguinte,null,null,p);
                                 break;
                             }
                         }
@@ -348,14 +349,15 @@ class Tabuleiro {
                     }
                     break;
             }
+            
         }
         return provaveisJogadas;   
     }
 
     private ArrayList<Jogada> filtraJogadas(ArrayList<Jogada> provaveisJogadas) {
-        if(provaveisJogadas.contains("captura")){
+        if(provaveisJogadas.contains(new Jogada("captura",null))){
             for (int i = 0; i < provaveisJogadas.size(); i++) {
-                if(provaveisJogadas.get(i).getTipo().equals("movimentação"))
+                if(provaveisJogadas.get(i).getTipo().equals("movimentacao"))
                     provaveisJogadas.remove(i);
             }
         }
@@ -406,5 +408,23 @@ class Tabuleiro {
         }
        
         return novo;
+    }
+    
+    public Peca getPecaBranca(String id){
+        for (int i = 0; i < brancas.size(); i++) {
+            Peca p = brancas.get(i);
+            if(p.getId().equals(id))
+                return p;
+        }
+        return null;
+    }
+    
+    public Peca getPecaPreta(String id){
+        for (int i = 0; i < pretas.size(); i++) {
+            Peca p = pretas.get(i);
+            if(p.getId().equals(id))
+                return p;
+        }
+        return null;
     }
 }    

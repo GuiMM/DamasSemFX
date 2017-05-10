@@ -5,6 +5,8 @@
  */
 package damas2;
 
+import java.util.Objects;
+
 /**
  *
  * @author Omar
@@ -13,7 +15,8 @@ class Jogada {
     private final String tipo;
     private final Celula destino;
     private Peca pecaCapturada;
-    
+    private Peca pecaJogada;
+
     public Jogada (String tipo, Celula destino){
         this.tipo = tipo;
         this.destino = destino;
@@ -27,6 +30,14 @@ class Jogada {
     
     public String getTipo(){
         return this.tipo;
+    }
+
+    public void setPecaJogada(Peca pecaJogada) {
+        this.pecaJogada = pecaJogada;
+    }
+    
+    public Peca getPecaJogada() {
+        return pecaJogada;
     }
     
     public Celula getDestino() {
@@ -45,7 +56,7 @@ class Jogada {
     }
     
     private void capturar(Tabuleiro t, Peca aJogar){
-        if (pecaCapturada.getId().contains("pr")) {
+        if (pecaCapturada.getJogador().equals("C")) {
             t.getPretas().remove(pecaCapturada);
         } else {
             t.getBrancas().remove(pecaCapturada);
@@ -58,22 +69,34 @@ class Jogada {
         t.getTabuleiro()[destino.getX()][destino.getY()].setPeca(aJogar);
         t.getTabuleiro()[aJogar.getPosX()][aJogar.getPosY()].setPeca(null);
         aJogar.setPosX(destino.getX()); aJogar.setPosY(destino.getY());         //atualizando a posicao da peca
-        if((aJogar.getPosX()==0 && aJogar.getId().contains("pr"))||
-           (aJogar.getPosX()==7 && aJogar.getId().contains("br")))
+        if((aJogar.getPosX()==0 && aJogar.getJogador().equals("C"))||
+           (aJogar.getPosX()==7 && aJogar.getJogador().equals("H")))
             fazerDama(aJogar);
     }
     
     private void fazerDama(Peca aJogar){
         aJogar.setEh_dama(true);
+        String novoId = aJogar.getId();
+        if(aJogar.getJogador().equals("C"))
+            aJogar.setId(novoId.replace("pr","PR"));
+        else
+            aJogar.setId(novoId.replace("br","BR"));
     }
     
     @Override
     public boolean equals(Object o){
         boolean retVal = false;
-        if(o instanceof String){
-            String t = (String)o;
-            retVal = t.equals(this.tipo);
+        if(o instanceof Jogada){
+            Jogada j = (Jogada)o;
+            retVal = j.tipo.equals(this.tipo);
         }
         return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.tipo);
+        return hash;
     }
 }

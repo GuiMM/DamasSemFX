@@ -11,8 +11,8 @@ package damas2;
  */
 class Peca {
     
-    private final String id;
-    private String jogador;
+    private String id;
+    private final String jogador;
     private boolean eh_dama;
     private int posX;
     private int posY;
@@ -47,8 +47,8 @@ class Peca {
         return jogador;
     }
 
-    public void setJogador(String jogador) {
-        this.jogador = jogador;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public boolean eh_Dama() {
