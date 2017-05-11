@@ -54,14 +54,18 @@ public class Damas2 {
     
     private static void minimax(){
         int v;
+        v = Integer.MIN_VALUE;
         ArrayList<Tabuleiro> prox = tabuleiro.possiveisProximasJogadas();
-        v = valorMax(tabuleiro, 3);
+        Tabuleiro prox_jogada=null;
+        //v = valorMax(tabuleiro, 3);
         for(int i = 0; i < prox.size(); i++){
-            if(prox.get(i).getVal() == v){
-                tabuleiro = prox.get(i).copiaTabuleiro();
-                break;
+            int aux = valorMax(prox.get(i).copiaTabuleiro(),3);
+            if (v<aux) {
+                prox_jogada=prox.get(i);
+                v=aux;
             }
-        }    
+        }
+        tabuleiro=prox_jogada;
     }
     
     
@@ -78,8 +82,8 @@ public class Damas2 {
             for (int j = 0; j < possibilidades_da_peca.size(); j++) {
                 Tabuleiro copia2 = t.copiaTabuleiro();               
                 Peca aux = copia2.getPretas().get(i);
-                aux.setPosX(peca.getPosX());
-                aux.setPosY(peca.getPosY());
+                //aux.setPosX(peca.getPosX());
+                //aux.setPosY(peca.getPosY());
                 possibilidades_da_peca.get(j).realizaJogada(copia2, aux);
                 
                 possibilidades.add(copia2);
@@ -87,7 +91,7 @@ public class Damas2 {
             }
         }
         
-         for (int i = 0; i < possibilidades.size(); i++) {
+         for (int i = 0; i < possibilidades.size(); i++) {           
              v = Integer.max(v, valorMin(possibilidades.get(i),depth-1));
          }
          return v;
@@ -106,10 +110,10 @@ public class Damas2 {
             for (int j = 0; j < possibilidades_da_peca.size(); j++) {
                 Tabuleiro copia2 = t.copiaTabuleiro();               
                 Peca aux = copia2.getPretas().get(i);
-                aux.setPosX(peca.getPosX());
-                aux.setPosY(peca.getPosY());
+                //aux.setPosX(peca.getPosX());
+                //aux.setPosY(peca.getPosY());
                 possibilidades_da_peca.get(j).realizaJogada(copia2, aux);
-                teste.put(copia2.funcaoDeAvaliacao(), copia2);
+                //teste.put(copia2.funcaoDeAvaliacao(), copia2);
                 possibilidades.add(copia2);
             }
         }
