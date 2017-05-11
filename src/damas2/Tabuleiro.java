@@ -219,7 +219,7 @@ class Tabuleiro {
         
         
         return valorPretas - valorBrancas;
-        //return pretas.size()-brancas.size();
+        
     }
 
     

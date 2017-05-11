@@ -46,18 +46,14 @@ public class Damas2 {
 
     private static void rodadaMaquina() {
         minimax();
-        //minimax c/ poda alfa beta
-        //alfaBetaStart();
-        
     }
     
     
     private static void minimax(){
         int v;
         v = Integer.MIN_VALUE;
-        ArrayList<Tabuleiro> prox = tabuleiro.possiveisProximasJogadas();
+        ArrayList<Tabuleiro> prox = tabuleiro.possiveisProximasJogadas();  //A partir do tabuleiro corrente, monta todas as possiveis jogadas das peças pretas(computador)
         Tabuleiro prox_jogada=null;
-        //v = valorMax(tabuleiro, 3);
         for(int i = 0; i < prox.size(); i++){
             int aux = valorMax(prox.get(i).copiaTabuleiro(),3);
             if (v<aux) {
@@ -69,10 +65,9 @@ public class Damas2 {
     }
     
     
-    private static int valorMax(Tabuleiro t, int depth){
+    private static int valorMin(Tabuleiro t, int depth){
         ArrayList <Tabuleiro> possibilidades = new ArrayList<>();
-        
-        if(t.getPretas().isEmpty()||t.getBrancas().isEmpty() || depth == 0)
+        if(t.getPretas().isEmpty()||t.getBrancas().isEmpty() || depth == 0)   
             return t.funcaoDeAvaliacao();
         int v;
         v = Integer.MIN_VALUE;
@@ -82,8 +77,6 @@ public class Damas2 {
             for (int j = 0; j < possibilidades_da_peca.size(); j++) {
                 Tabuleiro copia2 = t.copiaTabuleiro();               
                 Peca aux = copia2.getPretas().get(i);
-                //aux.setPosX(peca.getPosX());
-                //aux.setPosY(peca.getPosY());
                 possibilidades_da_peca.get(j).realizaJogada(copia2, aux);
                 
                 possibilidades.add(copia2);
@@ -92,14 +85,13 @@ public class Damas2 {
         }
         
          for (int i = 0; i < possibilidades.size(); i++) {           
-             v = Integer.max(v, valorMin(possibilidades.get(i),depth-1));
+             v = Integer.max(v, valorMax(possibilidades.get(i),depth-1));
          }
          return v;
     }
     
-    private static int valorMin(Tabuleiro t, int depth){
+    private static int valorMax(Tabuleiro t, int depth){
         ArrayList <Tabuleiro> possibilidades = new ArrayList<>();
-        HashMap<Integer,Tabuleiro> teste = new HashMap<>();
         if(t.getPretas().isEmpty()||t.getBrancas().isEmpty() || depth == 0)
             return t.funcaoDeAvaliacao();
         int v;
@@ -110,90 +102,18 @@ public class Damas2 {
             for (int j = 0; j < possibilidades_da_peca.size(); j++) {
                 Tabuleiro copia2 = t.copiaTabuleiro();               
                 Peca aux = copia2.getPretas().get(i);
-                //aux.setPosX(peca.getPosX());
-                //aux.setPosY(peca.getPosY());
                 possibilidades_da_peca.get(j).realizaJogada(copia2, aux);
-                //teste.put(copia2.funcaoDeAvaliacao(), copia2);
                 possibilidades.add(copia2);
             }
         }
         
          for (int i = 0; i < possibilidades.size(); i++) {
-             v = Integer.min(v, valorMax(possibilidades.get(i),depth-1));
+             v = Integer.min(v, valorMin(possibilidades.get(i),depth-1));
          }
          return v;
     }
        
     
-    private static void alfaBetaStart() {
-        int v;
-        ArrayList<Tabuleiro> prox = tabuleiro.possiveisProximasJogadas();
-        v = alfaBeta(tabuleiro, 15, Integer.MAX_VALUE, Integer.MIN_VALUE, true);
-        for (int i = 0; i < prox.size(); i++) {
-            if (prox.get(i).getVal() == v) {
-                tabuleiro = prox.get(i).copiaTabuleiro();
-                break;
-            }
-        }
-    }
-    
-    public static int alfaBeta(Tabuleiro t, int depth, int alfa, int beta, boolean maximizingPlayer) {
-        ArrayList<Tabuleiro> possibilidades = new ArrayList<>();
-        int v;
-        if (t.getPretas().isEmpty() || t.getBrancas().isEmpty() || depth == 0) {
-            return t.funcaoDeAvaliacao();
-        }
-        if (maximizingPlayer) {
-
-            v = Integer.MIN_VALUE;
-            for (int i = 0; i < t.getPretas().size(); i++) {
-                Peca peca = t.getPretas().get(i);
-                ArrayList<Jogada> possibilidades_da_peca = t.verificaJogadas(peca);
-                for (int j = 0; j < possibilidades_da_peca.size(); j++) {
-                    Tabuleiro copia2 = t.copiaTabuleiro();
-                    Peca aux = copia2.getPretas().get(i);
-                    aux.setPosX(peca.getPosX());
-                    aux.setPosY(peca.getPosY());
-                    possibilidades_da_peca.get(j).realizaJogada(copia2, aux);
-                    possibilidades.add(copia2);
-                }
-            }
-            for (int i = 0; i < possibilidades.size(); i++) {
-                v = Integer.max(v, alfaBeta(possibilidades.get(i), depth - 1, alfa , beta, false));
-                alfa = Integer.max(alfa, v);
-                if (beta <= alfa) {
-                    break; //cut-off
-                }
-            }
-
-            return v;
-        } else {
-            v = Integer.MAX_VALUE;
-            for (int i = 0; i < t.getPretas().size(); i++) {
-                Peca peca = t.getPretas().get(i);
-                ArrayList<Jogada> possibilidades_da_peca = t.verificaJogadas(peca);
-                for (int j = 0; j < possibilidades_da_peca.size(); j++) {
-                    Tabuleiro copia2 = t.copiaTabuleiro();
-                    Peca aux = copia2.getPretas().get(i);
-                    aux.setPosX(peca.getPosX());
-                    aux.setPosY(peca.getPosY());
-                    possibilidades_da_peca.get(j).realizaJogada(copia2, aux);
-
-                    possibilidades.add(copia2);
-                }
-            }
-            for (int i = 0; i < possibilidades.size(); i++) {
-                v = Integer.min(v, alfaBeta(possibilidades.get(i), depth - 1, alfa, beta, true));
-                beta = Integer.min(beta, v);
-                if (beta <= alfa) {
-                    break; //cutoff
-                }
-            }
-
-            return v;
-        }
-
-    }
     
     private static void rodadaHumano() {
         ArrayList<Peca> pecas = tabuleiro.getBrancas();
